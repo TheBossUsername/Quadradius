@@ -74,7 +74,11 @@ class Square:
                     pygame.draw.rect(window, top_color, (x - (tier * s_height) + padd, y - (tier * s_height) + padd, size - (padd * 2), size - (padd * 2)))
                 # Draw power up circle    
                 if self.power != None and self.height == tier + 1:
-                    pygame.draw.circle(window, GREEN, (x - (tier * s_height) + size // 2, y - (tier * s_height) + size // 2), size // 3)
+                        t = timer % 30
+                        orb = pygame.transform.scale(pygame.image.load(f'quadradius\Orb\orb{t}.png'), (size, size * .60))
+                        x = x - (tier * s_height)  
+                        y = y - (tier * s_height) + (size * .22) 
+                        window.blit(orb, (x, y))
 
         
 

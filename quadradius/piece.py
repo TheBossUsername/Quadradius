@@ -10,6 +10,7 @@ class Piece:
         self.selected = selected
         self.power = None
         self.player = player
+        self.traits = []
 
         
     def draw(self, width, height, window, tier):
@@ -31,6 +32,12 @@ class Piece:
                 pygame.draw.circle(window, power_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .955)
             pygame.draw.circle(window, CYAN, (x - (tier * s_height), y - (tier * s_height)), h_size * .9)
             pygame.draw.circle(window, body_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .8)
+            if 1 in self.traits:
+                image = pygame.transform.scale(pygame.image.load(f'quadradius\Orb\oant.png'), (size * .3, size * .3))
+                antenna = pygame.transform.rotate(image, 315)
+                z = x - (tier * s_height) + (size * .2)
+                t = y - (tier * s_height) - (size // 1.8) 
+                window.blit(antenna, (z, t))
             pygame.draw.circle(window, BLACK, (x - (tier * s_height), y - (tier * s_height)), h_size * .3)
             pygame.draw.circle(window, piece_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .2)
         else:
@@ -38,6 +45,12 @@ class Piece:
                 pygame.draw.circle(window, power_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .955)
             pygame.draw.circle(window, BLACK, (x - (tier * s_height), y - (tier * s_height)), h_size * .9)
             pygame.draw.circle(window, body_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .8)
+            if 1 in self.traits:
+                image = pygame.transform.scale(pygame.image.load(f'quadradius\Orb\oant.png'), (size * .3, size * .3))
+                antenna = pygame.transform.rotate(image, 315)
+                z = x - (tier * s_height) + (size * .2)
+                t = y - (tier * s_height) - (size // 1.8) 
+                window.blit(antenna, (z, t))
             pygame.draw.circle(window, BLACK, (x - (tier * s_height), y - (tier * s_height)), h_size * .3)
             pygame.draw.circle(window, piece_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .2)
             

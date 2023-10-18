@@ -172,7 +172,7 @@ class Game:
                                 text = ("This piece has no power")
                             else:
                                 if use_power:
-                                    selected_piece.power.use(selected_piece.row, selected_piece.col, board)
+                                    selected_piece.power.use(selected_piece, board)
                                     use_power = False
                                     selected_piece.power = None
                                     selected_piece = board.de_select_piece()
@@ -270,7 +270,7 @@ class Game:
                     if event.key == pygame.K_SPACE:
                         self.run_game()
 
-                    if event.key == pygame.K_q:
+                    if event.key == pygame.K_x:
                         running = False
 
         pygame.quit
