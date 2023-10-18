@@ -76,7 +76,7 @@ class Game:
         board = Board()
 
         turn_end = True
-        spawn = 1
+        spawn = 5
         use_power = False
         selected_piece = None
         selected_square = board.get_selected_square()
@@ -196,7 +196,7 @@ class Game:
                 chance = randint(1, spawn)
                 if chance == 1:
                     board.spawn_power()
-                    spawn = 1
+                    spawn = 5
                 else:
                     spawn -= 1     
 
