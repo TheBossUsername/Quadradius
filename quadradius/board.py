@@ -31,7 +31,7 @@ class Board:
                 elif row == 6 or row == 7:
                     self.pieces[row].append(Piece(row, col, False, 1))
                 else:
-                    self.pieces[row].append(0)
+                    self.pieces[row].append(None)
                 
     def draw(self, window, width, height, timer):
         window.fill(BLACK)
@@ -41,7 +41,7 @@ class Board:
                     square = self.squares[row][col]
                     piece = self.pieces[row][col]
                     square.draw_square(width, height, window, tier, timer)
-                    if piece != 0  and square.height == tier + 1:
+                    if piece != None  and square.height == tier + 1:
                         piece.draw(width, height, window, tier)
                                                         
 
@@ -51,7 +51,7 @@ class Board:
                 square = self.squares[row][col]
                 if square.selected:
                     selected = square
-        if self.pieces[selected.row][selected.col] != 0:
+        if self.pieces[selected.row][selected.col] != None:
             selected_piece = self.pieces[selected.row][selected.col]
             selected_piece.selected = True
             return selected_piece
@@ -62,7 +62,7 @@ class Board:
         for row in range(ROWS):
             for col in range(COLS):
                 piece = self.pieces[row][col]
-                if piece != 0:
+                if piece != None:
                     piece.selected = False
         return None
 
@@ -80,12 +80,12 @@ class Board:
         for row in range(ROWS):
             for col in range(COLS):
                 piece = self.pieces[row][col]
-                if piece != 0:
+                if piece != None:
                     if piece.selected:
                         selected_piece = piece
 
         if new_row >= 0 and new_col >= 0 and new_row < ROWS and new_col < COLS:
-            self.pieces[selected_piece.row][selected_piece.col], self.pieces[new_row][new_col] = 0, self.pieces[selected_piece.row][selected_piece.col]
+            self.pieces[selected_piece.row][selected_piece.col], self.pieces[new_row][new_col] = None, self.pieces[selected_piece.row][selected_piece.col]
             selected_piece.move(new_row, new_col)
         else:
             print("Can not go there")
@@ -131,7 +131,7 @@ class Board:
             for col in range(COLS):
                 square = self.squares[row][col]
                 piece = self.pieces[row][col]
-                if piece == 0 and square.power == None:
+                if piece == None and square.power == None:
                     potential.append(square)
         if len(potential) != 0:
             chosen = choice(potential)

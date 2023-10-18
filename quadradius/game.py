@@ -27,7 +27,7 @@ class Game:
         if (tq.height - sq.height) >= 2:
             return False
         
-        if board.pieces[tq.row][tq.col] != 0:
+        if board.pieces[tq.row][tq.col] != None:
             tp = board.pieces[tq.row][tq.col]
             if tp.player == sp.player:
                 return False
@@ -49,7 +49,7 @@ class Game:
         for row in range(ROWS):
             for col in range(COLS):
                 piece = board.pieces[row][col]
-                if piece != 0:
+                if piece != None:
                     if piece.player == 1:
                         pieces_1 += 1
                     elif piece.player == 2:
@@ -66,7 +66,7 @@ class Game:
             for col in range(COLS):
                 square = board.squares[row][col]
                 piece = board.pieces[row][col]
-                if square.power != None and piece != 0:
+                if square.power != None and piece != None:
                     piece.power = square.power
                     square.power = None
                 
