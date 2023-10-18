@@ -34,50 +34,49 @@ class Power:
         
         
     def use(self, piece, board):
+        # Raise column
         if self.type == 1:
-            for row in range(ROWS):
-                for col in range(COLS):
-                    square = board.squares[row][col]
-                    t1 = piece.traits.count(1)
-
-                    if t1 > 0:
-                        if col == piece.col or col == piece.col - t1 or col == piece.col + t1:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.col + r >= 0 and piece.col + r <= 7:
+                        for x in range(8):
+                            square = board.squares[x][piece.col + r]
                             if square.height >= 5:
                                 pass
                             else:
                                 square.height += 1
-
-                    elif col == piece.col:
-                        if square.height >= 5:
-                            pass
-                        else:
-                            square.height += 1
-
+            else:
+                for x in range(8):
+                    square = board.squares[x][piece.col]
+                    if square.height >= 5:
+                        pass
+                    else:
+                        square.height += 1
+        #Raise Row
         if self.type == 2:
-            for row in range(ROWS):
-                for col in range(COLS):
-                    square = board.squares[row][col]
-                    t1 = piece.traits.count(1)
-
-                    if t1 > 0:
-                        if row == piece.row or col == piece.row - t1 or col == piece.row + t1:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.row + r >= 0 and piece.row + r <= 7:
+                        for square in board.squares[piece.row + r]:
                             if square.height >= 5:
                                 pass
                             else:
                                 square.height += 1
-
-                    elif row == piece.row:
-                        if square.height >= 5:
-                            pass
-                        else:
-                            square.height += 1
-
+            else:
+                for square in board.squares[piece.row]:
+                    if square.height >= 5:
+                        pass
+                    else:
+                        square.height += 1
+        # Raise Radial
         if self.type == 3:
             t1 = piece.traits.count(1)
 
             if t1 > 0:
-                for x in range(t1 - 1 , t1 + 2):
-                    for x in range(t1 - 1 , t1 + 2):
+                for x in range(-t1 -1 , t1 + 2):
+                    for y in range(-t1 - 1, t1 + 2):
                         if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
                             square = board.squares[piece.row + y][piece.col + x]
                             if square.height >= 5:
@@ -93,55 +92,52 @@ class Power:
                                 pass
                             else:
                                 square.height += 1
-
-        
+        # Lower column
         if self.type == 4:
-            for row in range(ROWS):
-                for col in range(COLS):
-                    square = board.squares[row][col]
-                    t1 = piece.traits.count(1)
-
-                    if t1 > 0:
-                        if col == piece.col or col == piece.col - t1 or col == piece.col + t1:
-                            if square.height >= 5:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.col + r >= 0 and piece.col + r <= 7:
+                       for x in range(8):
+                            square = board.squares[x][piece.col + r]
+                            if square.height <= 0:
                                 pass
                             else:
                                 square.height -= 1
-
-                    elif col == piece.col:
-                        if square.height >= 5:
-                            pass
-                        else:
-                            square.height -= 1
-
+            else:
+                for x in range(8):
+                    square = board.squares[x][piece.col]
+                    if square.height <= 0:
+                        pass
+                    else:
+                        square.height -= 1
+        # Lower Row
         if self.type == 5:
-            for row in range(ROWS):
-                for col in range(COLS):
-                    square = board.squares[row][col]
-                    t1 = piece.traits.count(1)
-
-                    if t1 > 0:
-                        if row == piece.row or col == piece.row - t1 or col == piece.row + t1:
-                            if square.height >= 5:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.row + r >= 0 and piece.row + r <= 7:
+                        for square in board.squares[piece.row + r]:
+                            if square.height <= 0:
                                 pass
                             else:
                                 square.height -= 1
-
-                    elif row == piece.row:
-                        if square.height >= 5:
-                            pass
-                        else:
-                            square.height -= 1
-
+            else:
+                for square in board.squares[piece.row]:
+                    if square.height <= 0:
+                        pass
+                    else:
+                        square.height -= 1
+        # Lower Radial
         if self.type == 6:
             t1 = piece.traits.count(1)
 
             if t1 > 0:
-                for x in range(t1 - 1 , t1 + 2):
-                    for x in range(t1 - 1 , t1 + 2):
+                for x in range(-t1 -1 , t1 + 2):
+                    for y in range(-t1 - 1, t1 + 2):
                         if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
                             square = board.squares[piece.row + y][piece.col + x]
-                            if square.height >= 5:
+                            if square.height <= 0:
                                 pass
                             else:
                                 square.height -= 1
@@ -150,11 +146,11 @@ class Power:
                     for y in range(-1 , 2):
                         if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
                             square = board.squares[piece.row + y][piece.col + x]
-                            if square.height >= 5:
+                            if square.height <= 0:
                                 pass
                             else:
                                 square.height -= 1
-
+        # Grow Quadradius
         if self.type == 7:
             piece.traits.append(1)
         
