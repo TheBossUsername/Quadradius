@@ -85,7 +85,11 @@ class Board:
                         selected_piece = piece
 
         if new_row >= 0 and new_col >= 0 and new_row < ROWS and new_col < COLS:
-            self.pieces[selected_piece.row][selected_piece.col], self.pieces[new_row][new_col] = None, self.pieces[selected_piece.row][selected_piece.col]
+            if 5 in selected_piece.traits: 
+                self.pieces[selected_piece.row][selected_piece.col], self.pieces[new_row][new_col] = Piece(selected_piece.row, selected_piece.col, False, selected_piece.player), self.pieces[selected_piece.row][selected_piece.col]
+                selected_piece.traits.remove(5)
+            else:
+                self.pieces[selected_piece.row][selected_piece.col], self.pieces[new_row][new_col] = None, self.pieces[selected_piece.row][selected_piece.col]
             selected_piece.move(new_row, new_col)
         else:
             print("Can not go there")

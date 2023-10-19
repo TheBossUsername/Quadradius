@@ -27,7 +27,15 @@ class Piece:
         elif self.player == 2:
             piece_color = (0, 0, 155 + (tier * 20))
         proof_color = (63 + (tier * 11), 71 + (tier * 11), 76 + (tier * 11))
+        padd = height // 400
+        if padd < 2:
+            padd = 2
 
+        if 5 in self.traits:
+            pygame.draw.rect(window, (0, 155 + (tier * 20), 155 + (tier * 20)), (x - (tier * s_height) + padd - (size // 2), y - (tier * s_height) + padd - (size // 2), size - (padd * 2), size - (padd * 2)))
+            pygame.draw.rect(window, (0, 100 + (tier * 20), 100 + (tier * 20)), (x - (tier * s_height) + padd * 3 - (size // 2), y - (tier * s_height) + padd * 3 - (size // 2), size - (padd * 6), size - (padd * 6)))
+            pygame.draw.rect(window, (0, 50 + (tier * 20), 50 + (tier * 20)), (x - (tier * s_height) + padd * 5 - (size // 2), y - (tier * s_height) + padd * 5 - (size // 2), size - (padd * 10), size - (padd * 10)))
+        
         if self.power != None:
             pygame.draw.circle(window, power_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .955)
 

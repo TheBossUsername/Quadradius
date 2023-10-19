@@ -2,11 +2,11 @@ from random import randint
 from .constants import *
 
 
-total = 15
+total = 16
 class Power:
 
     def __init__(self):
-        self.type = randint(1, total)
+        self.type = randint(16, total)
         self.description = self.get_description(self.type)
     
     def get_description(self, type):
@@ -55,6 +55,9 @@ class Power:
         
         if type == 15:
             return ("Move Diagonal")
+        
+        if type == 16:
+            return ("Multiply")
         
     def use(self, piece, board):
         # Wall column
@@ -253,3 +256,8 @@ class Power:
         if self.type == 15:
             if 4 not in piece.traits:
                 piece.traits.append(4)
+
+        # Multiply
+        if self.type == 16:
+            if 5 not in piece.traits:
+                piece.traits.append(5)
