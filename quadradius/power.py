@@ -2,11 +2,11 @@ from random import randint
 from .constants import *
 
 
-total = 22
+total = 25
 class Power:
 
     def __init__(self):
-        self.type = randint(20, total)
+        self.type = randint(1, total)
         self.description = self.get_description(self.type)
     
     def get_description(self, type):
@@ -76,6 +76,15 @@ class Power:
         
         if type == 22:
             return ("Kamikaze Radial")
+        
+        if type == 23:
+            return ("Destroy Column")
+        
+        if type == 24:
+            return ("Destroy Row")
+        
+        if type == 25:
+            return ("Destroy Radial")
 
     def use(self, piece, board):
         # Wall column
@@ -419,4 +428,58 @@ class Power:
                     for y in range(-1 , 2):
                         if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
                             board.pieces[piece.row + y][piece.col + x] = None
+
+        # Destroy Column
+        if self.type == 23:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.col + r >= 0 and piece.col + r <= 7:
+                        for x in range(8):
+                            if board.pieces[x][piece.col + r] != None:
+                                if board.pieces[x][piece.col + r].player != piece.player:
+                                    board.pieces[x][piece.col + r] = None
+
+            else:
+                for x in range(8):
+                    if board.pieces[x][piece.col] != None:
+                        if board.pieces[x][piece.col].player != piece.player:
+                            board.pieces[x][piece.col] = None
+        
+        # Destroy Row
+        if self.type == 24:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.row + r >= 0 and piece.row + r <= 7:
+                        for j in range(0,8):
+                            if board.pieces[piece.row + r][j] != None:
+                                if board.pieces[piece.row + r][j].player != piece.player:
+                                    board.pieces[piece.row + r][j] = None
+            else:
+                for j in range(0,8):
+                    if board.pieces[piece.row][j] != None:
+                        if board.pieces[piece.row][j].player != piece.player:
+                            board.pieces[piece.row][j] = None
+                    
+
+        # Destroy Radial
+        if self.type == 25:
+            t1 = piece.traits.count(1)
+
+            if t1 > 0:
+                for x in range(-t1 -1 , t1 + 2):
+                    for y in range(-t1 - 1, t1 + 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            if board.pieces[piece.row + y][piece.col + x] != None:
+                                if board.pieces[piece.row + y][piece.col + x].player != piece.player:
+                                    board.pieces[piece.row + y][piece.col + x] = None
+                            
+            else:
+                for x in range(-1 , 2):
+                    for y in range(-1 , 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            if board.pieces[piece.row + y][piece.col + x] != None:
+                                if board.pieces[piece.row + y][piece.col + x].player != piece.player:
+                                    board.pieces[piece.row + y][piece.col + x] = None
                             
