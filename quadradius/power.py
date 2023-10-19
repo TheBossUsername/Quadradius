@@ -2,11 +2,11 @@ from random import randint
 from .constants import *
 
 
-total = 16
+total = 19
 class Power:
 
     def __init__(self):
-        self.type = randint(16, total)
+        self.type = randint(1, total)
         self.description = self.get_description(self.type)
     
     def get_description(self, type):
@@ -59,6 +59,15 @@ class Power:
         if type == 16:
             return ("Multiply")
         
+        if type == 17:
+            return ("Invert Column")
+        
+        if type == 18:
+            return ("Invert Row")
+        
+        if type == 19:
+            return ("Invert Radial")
+
     def use(self, piece, board):
         # Wall column
         if self.type == 1:
@@ -261,3 +270,100 @@ class Power:
         if self.type == 16:
             if 5 not in piece.traits:
                 piece.traits.append(5)
+
+        # Invert Column
+        if self.type == 17:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.col + r >= 0 and piece.col + r <= 7:
+                        for x in range(8):
+                            square = board.squares[x][piece.col + r]
+                            if square.height == 3:
+                                pass
+                            elif square.height == 2:
+                                square.height = 4
+                            elif square.height == 1:
+                                square.height = 5
+                            elif square.height == 4:
+                                square.height = 2
+                            elif square.height == 5:
+                                square.height = 1
+            else:
+                for x in range(8):
+                    square = board.squares[x][piece.col]
+                    if square.height == 3:
+                        pass
+                    elif square.height == 2:
+                        square.height = 4
+                    elif square.height == 1:
+                        square.height = 5
+                    elif square.height == 4:
+                        square.height = 2
+                    elif square.height == 5:
+                        square.height = 1
+
+        # Invert Row
+        if self.type == 18:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.row + r >= 0 and piece.row + r <= 7:
+                        for square in board.squares[piece.row + r]:
+                            if square.height == 3:
+                                pass
+                            elif square.height == 2:
+                                square.height = 4
+                            elif square.height == 1:
+                                square.height = 5
+                            elif square.height == 4:
+                                square.height = 2
+                            elif square.height == 5:
+                                square.height = 1
+            else:
+                for square in board.squares[piece.row]:
+                    if square.height == 3:
+                        pass
+                    elif square.height == 2:
+                        square.height = 4
+                    elif square.height == 1:
+                        square.height = 5
+                    elif square.height == 4:
+                        square.height = 2
+                    elif square.height == 5:
+                        square.height = 1
+
+        # Invert Radial
+        if self.type == 19:
+            t1 = piece.traits.count(1)
+
+            if t1 > 0:
+                for x in range(-t1 -1 , t1 + 2):
+                    for y in range(-t1 - 1, t1 + 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            square = board.squares[piece.row + y][piece.col + x]
+                            if square.height == 3:
+                                pass
+                            elif square.height == 2:
+                                square.height = 4
+                            elif square.height == 1:
+                                square.height = 5
+                            elif square.height == 4:
+                                square.height = 2
+                            elif square.height == 5:
+                                square.height = 1
+            else:
+                for x in range(-1 , 2):
+                    for y in range(-1 , 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            square = board.squares[piece.row + y][piece.col + x]
+                            if square.height == 3:
+                                pass
+                            elif square.height == 2:
+                                square.height = 4
+                            elif square.height == 1:
+                                square.height = 5
+                            elif square.height == 4:
+                                square.height = 2
+                            elif square.height == 5:
+                                square.height = 1
