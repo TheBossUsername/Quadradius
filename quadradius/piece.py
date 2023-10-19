@@ -26,39 +26,38 @@ class Piece:
             piece_color = (155 + (tier * 20), 0, 0)
         elif self.player == 2:
             piece_color = (0, 0, 155 + (tier * 20))
+        proof_color = (63 + (tier * 11), 71 + (tier * 11), 76 + (tier * 11))
+
+        if self.power != None:
+            pygame.draw.circle(window, power_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .955)
 
         if self.selected:
-            if self.power != None:
-                pygame.draw.circle(window, power_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .955)
             pygame.draw.circle(window, CYAN, (x - (tier * s_height), y - (tier * s_height)), h_size * .9)
-            if 2 in self.traits:
-                pygame.draw.circle(window, STEEL, (x - (tier * s_height), y - (tier * s_height)), h_size * .8)
-            else:
-                pygame.draw.circle(window, body_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .8)
-            if 1 in self.traits:
-                image = pygame.transform.scale(pygame.image.load(f'quadradius\Orb\oant.png'), (size * .3, size * .3))
-                antenna = pygame.transform.rotate(image, 315)
-                z = x - (tier * s_height) + (size * .2)
-                t = y - (tier * s_height) - (size // 1.8) 
-                window.blit(antenna, (z, t))
-            pygame.draw.circle(window, BLACK, (x - (tier * s_height), y - (tier * s_height)), h_size * .3)
-            pygame.draw.circle(window, piece_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .2)
         else:
-            if self.power != None:
-                pygame.draw.circle(window, power_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .955)
             pygame.draw.circle(window, BLACK, (x - (tier * s_height), y - (tier * s_height)), h_size * .9)
-            if 2 in self.traits:
-                pygame.draw.circle(window, STEEL, (x - (tier * s_height), y - (tier * s_height)), h_size * .8)
-            else:
-                pygame.draw.circle(window, body_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .8)
-            if 1 in self.traits:
-                image = pygame.transform.scale(pygame.image.load(f'quadradius\Orb\oant.png'), (size * .3, size * .3))
-                antenna = pygame.transform.rotate(image, 315)
-                z = x - (tier * s_height) + (size * .2)
-                t = y - (tier * s_height) - (size // 1.8) 
-                window.blit(antenna, (z, t))
-            pygame.draw.circle(window, BLACK, (x - (tier * s_height), y - (tier * s_height)), h_size * .3)
-            pygame.draw.circle(window, piece_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .2)
+
+        if 2 in self.traits:
+            pygame.draw.circle(window, proof_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .8)
+        else:
+            pygame.draw.circle(window, body_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .8)
+
+        if 1 in self.traits:
+            image = pygame.transform.scale(pygame.image.load(f'quadradius\Orb\oant.png'), (size * .3, size * .3))
+            antenna = pygame.transform.rotate(image, 55)
+            z = x - (tier * s_height) - (size * .6)
+            t = y - (tier * s_height) - (size // 1.8) 
+            window.blit(antenna, (z, t))
+
+        if 3 in self.traits:
+            fan = pygame.transform.scale(pygame.image.load(f'quadradius\Orb\ofan.png'), (size * .3, size * .3))
+            z = x - (tier * s_height) - (size * .5)
+            t = y - (tier * s_height) - (size * .15)
+            window.blit(fan, (z, t))
+            z = x - (tier * s_height) + (size * .2)
+            window.blit(fan, (z, t))
+
+        pygame.draw.circle(window, BLACK, (x - (tier * s_height), y - (tier * s_height)), h_size * .3)
+        pygame.draw.circle(window, piece_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .2)
             
 
     

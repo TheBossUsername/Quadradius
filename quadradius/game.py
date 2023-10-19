@@ -25,10 +25,12 @@ class Game:
         sp = selected_piece
         sq = board.squares[sp.row][sp.col]
         tp = board.pieces[tq.row][tq.col]
-        if (tq.height - sq.height) >= 2:
-            return False
+
+        if 3 not in sp.traits:
+            if (tq.height - sq.height) >= 2:
+                return False
         
-        if board.pieces[tq.row][tq.col] != None:
+        if tp != None:
             if tp.player == sp.player:
                 return False
             if 2 in tp.traits:
