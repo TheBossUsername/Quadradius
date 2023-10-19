@@ -2,11 +2,11 @@ from random import randint
 from .constants import *
 
 
-total = 19
+total = 22
 class Power:
 
     def __init__(self):
-        self.type = randint(1, total)
+        self.type = randint(20, total)
         self.description = self.get_description(self.type)
     
     def get_description(self, type):
@@ -67,6 +67,15 @@ class Power:
         
         if type == 19:
             return ("Invert Radial")
+        
+        if type == 20:
+            return ("Kamikaze Column")
+        
+        if type == 21:
+            return ("Kamikaze Row")
+        
+        if type == 22:
+            return ("Kamikaze Radial")
 
     def use(self, piece, board):
         # Wall column
@@ -367,3 +376,47 @@ class Power:
                                 square.height = 2
                             elif square.height == 5:
                                 square.height = 1
+
+        
+        # Kamikaze Column
+        if self.type == 20:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.col + r >= 0 and piece.col + r <= 7:
+                        for x in range(8):
+                            board.pieces[x][piece.col + r] = None
+
+            else:
+                for x in range(8):
+                    board.pieces[x][piece.col] = None
+        
+        # Kamikaze Row
+        if self.type == 21:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.row + r >= 0 and piece.row + r <= 7:
+                        for j in range(0,8):
+                            board.pieces[piece.row][j] = None
+            else:
+                for j in range(0,8):
+                    board.pieces[piece.row][j] = None
+                    
+
+        # Kamikaze Radial
+        if self.type == 22:
+            t1 = piece.traits.count(1)
+
+            if t1 > 0:
+                for x in range(-t1 -1 , t1 + 2):
+                    for y in range(-t1 - 1, t1 + 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            board.pieces[piece.row + y][piece.col + x] = None
+                            
+            else:
+                for x in range(-1 , 2):
+                    for y in range(-1 , 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            board.pieces[piece.row + y][piece.col + x] = None
+                            
