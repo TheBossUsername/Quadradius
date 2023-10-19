@@ -2,7 +2,7 @@ from random import randint
 from .constants import *
 
 
-total = 9
+total = 10
 class Power:
 
     def __init__(self):
@@ -37,6 +37,9 @@ class Power:
         
         if type == 9:
             return ("Raise Tile")
+        
+        if type == 10:
+            return ("Jump Proof")
         
     def use(self, piece, board):
         # Wall column
@@ -146,5 +149,10 @@ class Power:
                 pass
             else:
                 square.height += 1
+                
+        # Jump Proof
+        if self.type == 10:
+            if 2 not in piece.traits:
+                piece.traits.append(2)
 
         

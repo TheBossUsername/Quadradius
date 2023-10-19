@@ -24,13 +24,16 @@ class Game:
         tq = selected_square
         sp = selected_piece
         sq = board.squares[sp.row][sp.col]
+        tp = board.pieces[tq.row][tq.col]
         if (tq.height - sq.height) >= 2:
             return False
         
         if board.pieces[tq.row][tq.col] != None:
-            tp = board.pieces[tq.row][tq.col]
             if tp.player == sp.player:
                 return False
+            if 2 in tp.traits:
+                return False
+        
             
         if (tq.row, tq.col) == (sp.row + 1, sp.col):
             return True
