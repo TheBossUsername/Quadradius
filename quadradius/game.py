@@ -45,6 +45,17 @@ class Game:
             return True
         elif (tq.row, tq.col) == (sp.row, sp.col - 1):
             return True
+        elif 4 in sp.traits:
+            if (tq.row, tq.col) == (sp.row + 1, sp.col + 1):
+                return True
+            elif (tq.row, tq.col) == (sp.row - 1, sp.col + 1):
+                return True
+            elif (tq.row, tq.col) == (sp.row - 1, sp.col - 1):
+                return True
+            elif (tq.row, tq.col) == (sp.row + 1, sp.col - 1):
+                return True
+            else:
+                return False
         else:
             return False
 

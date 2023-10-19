@@ -41,6 +41,22 @@ class Piece:
         else:
             pygame.draw.circle(window, body_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .8)
 
+        if 4 in self.traits:
+            image = pygame.transform.scale(pygame.image.load(f'quadradius\Orb\oarw.png'), (size * .2, size * .2))
+            arrow = pygame.transform.rotate(image, 45)
+            z = x - (tier * s_height) - (size * .33)
+            t = y - (tier * s_height) - (size * .31) 
+            window.blit(arrow, (z, t))
+            arrow = pygame.transform.rotate(image, 140)
+            t = y - (tier * s_height) + (size * .045)
+            window.blit(arrow, (z, t))
+            arrow = pygame.transform.rotate(image, 230)
+            z = x - (tier * s_height) + (size * .08)
+            window.blit(arrow, (z, t))
+            arrow = pygame.transform.rotate(image, 320)
+            t = y - (tier * s_height) - (size * .31) 
+            window.blit(arrow, (z, t))
+
         if 1 in self.traits:
             image = pygame.transform.scale(pygame.image.load(f'quadradius\Orb\oant.png'), (size * .3, size * .3))
             antenna = pygame.transform.rotate(image, 55)
