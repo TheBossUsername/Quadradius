@@ -83,7 +83,7 @@ class Game:
                 square = board.squares[row][col]
                 piece = board.pieces[row][col]
                 if square.power != None and piece != None:
-                    piece.power = square.power
+                    piece.powers.append(square.power)
                     square.power = None
                 
 
@@ -98,6 +98,7 @@ class Game:
         selected_square = board.get_selected_square()
         turn = randint(1,2)
         timer = 0
+        selected_power = None
         
 
         running = True
@@ -118,31 +119,37 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
                         if use_power:
-                            text = (f"Use: {selected_piece.power.description}? Confirm: Z Back: X")
+                            pass
                         else:
                             selected_square = board.move_selected_square(selected_square, 1)
 
                     if event.key == pygame.K_RIGHT:
                         if use_power:
-                            text = (f"Use: {selected_piece.power.description}? Confirm: Z Back: X")
+                            if selected_power < len(selected_piece.powers) - 1:
+                                selected_power += 1
+                                board.de_target_squares()
+                            pass
                         else:
                             selected_square = board.move_selected_square(selected_square, 2)
 
                     if event.key == pygame.K_DOWN:
                         if use_power:
-                            text = (f"Use: {selected_piece.power.description}? Confirm: Z Back: X")
+                            pass
                         else:
                             selected_square = board.move_selected_square(selected_square, 3)
 
                     if event.key == pygame.K_LEFT:
                         if use_power:
-                            text = (f"Use: {selected_piece.power.description}? Confirm: Z Back: X")
+                            if selected_power > 0:
+                                selected_power -= 1
+                                board.de_target_squares()
+                            pass
                         else:
                             selected_square = board.move_selected_square(selected_square, 4)
 
                     if event.key == pygame.K_SPACE:
                         if use_power:
-                            text = (f"Use: {selected_piece.get_name()}? Confirm: Z Back: X")
+                            pass
                         else:
                             if selected_piece == None:
                                 selected_piece = board.select_piece()
@@ -150,8 +157,8 @@ class Game:
                                     text = ("No piece was selected")
                                     selected_piece = board.de_select_piece()
                                 elif selected_piece.player == turn:
-                                    if selected_piece.power != None:
-                                        text = (f"Move: Space bar, {selected_piece.get_name()}: Z, Back: X")
+                                    if len(selected_piece.powers) != 0:
+                                        text = (f"Move: Space bar, Powers: Z, Back: X")
                                     else:
                                         text = ("Move: Space bar, Back: X")
                                 elif selected_piece.player != turn:
@@ -173,6 +180,7 @@ class Game:
                     if event.key == pygame.K_x:
                         selected_piece = board.de_select_piece()
                         use_power = False
+                        selected_power = None
                         if turn == 1:
                             text = ("It is Red's turn")
                         elif turn == 2:
@@ -184,21 +192,22 @@ class Game:
                         if selected_piece == None:
                             text = ("No piece was selected")
                         elif selected_piece != None:
-                            if selected_piece.power == None:
+                            if len(selected_piece.powers) == 0:
                                 text = ("This piece has no power")
                             else:
                                 if use_power:
-                                    selected_piece.power.use(selected_piece, board)
+                                    selected_piece.use_power(board, selected_power)
                                     use_power = False
-                                    selected_piece.power = None
+                                    del selected_piece.powers[selected_power] 
+                                    selected_power = None
                                     selected_piece = board.de_select_piece()
                                     turn_end = True
                                 else:
-                                    text = (f"Use: {selected_piece.get_name()}? Confirm: Z Back: X")
+                                    selected_power = 0
                                     use_power = True
 
             if use_power:
-                selected_piece.show_targets(board)
+                selected_piece.show_targets(selected_power, board)
             else:
                 board.de_target_squares()
             
@@ -223,12 +232,34 @@ class Game:
 
                 self.give_power(board)
             board.draw(self.window, self.width, self.height, timer)
-            font = pygame.font.Font(None, self.width // 20)
-            text_center = (self.width // 2, self.height - (self.height // 22))
-            text_surface = font.render(text, True, WHITE)
-            text_rect = text_surface.get_rect()
-            text_rect.center = (text_center)
-            self.window.blit(text_surface, text_rect)
+            if use_power:
+                width_spacing = 2 + len(selected_piece.powers)
+                for x in range(0, len(selected_piece.powers)):
+                    text = (f"{selected_piece.get_power_name(x)}")
+                    font = pygame.font.Font(None, self.width // (20  + (5 * (len(selected_piece.powers) - 1))))
+                    text_center = (self.width * (x + 1) // width_spacing, self.height - (self.height // 22))
+                    if x == selected_power:
+                        text_surface = font.render(text, True, RED)
+                    else:
+                        text_surface = font.render(text, True, WHITE)
+                    text_rect = text_surface.get_rect()
+                    text_rect.center = (text_center)
+                    self.window.blit(text_surface, text_rect)
+                
+                text = (f"Confirm: Z Back: X")
+                font = pygame.font.Font(None, self.width // (20  + (5 * (len(selected_piece.powers) - 1))))
+                text_center = (self.width * (width_spacing - 1) // width_spacing, self.height - (self.height // 22))
+                text_surface = font.render(text, True, WHITE)
+                text_rect = text_surface.get_rect()
+                text_rect.center = (text_center)
+                self.window.blit(text_surface, text_rect)
+            else:
+                font = pygame.font.Font(None, self.width // 20)
+                text_center = (self.width // 2, self.height - (self.height // 22))
+                text_surface = font.render(text, True, WHITE)
+                text_rect = text_surface.get_rect()
+                text_rect.center = (text_center)
+                self.window.blit(text_surface, text_rect)
             pygame.display.update()
             won = self.check_win(board)
             if won == 1 or won == 2:

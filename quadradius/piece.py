@@ -8,17 +8,19 @@ class Piece:
         self.row = row
         self.col = col
         self.selected = selected
-        self.power = None
+        self.powers = []
         self.player = player
         self.traits = []
 
-    def get_name(self):
-        description = self.power.get_name()
+    def get_power_name(self, index):
+        description = self.powers[index].get_name()
         return description
     
-    def show_targets(self, board):
-        self.power.show_targets(self, board)
+    def show_targets(self, index, board):
+        self.powers[index].show_targets(self, board)
 
+    def use_power(self, board, index):
+        self.powers[index].use(self, board)
         
     def draw(self, width, height, window, tier):
         s_amount = 8
@@ -43,7 +45,7 @@ class Piece:
             pygame.draw.rect(window, (0, 100 + (tier * 20), 100 + (tier * 20)), (x - (tier * s_height) + padd * 3 - (size // 2), y - (tier * s_height) + padd * 3 - (size // 2), size - (padd * 6), size - (padd * 6)))
             pygame.draw.rect(window, (0, 50 + (tier * 20), 50 + (tier * 20)), (x - (tier * s_height) + padd * 5 - (size // 2), y - (tier * s_height) + padd * 5 - (size // 2), size - (padd * 10), size - (padd * 10)))
         
-        if self.power != None:
+        if len(self.powers) != 0:
             pygame.draw.circle(window, power_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .955)
 
         if self.selected:
