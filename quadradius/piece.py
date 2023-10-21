@@ -12,6 +12,13 @@ class Piece:
         self.player = player
         self.traits = []
 
+    def get_name(self):
+        description = self.power.get_name()
+        return description
+    
+    def show_targets(self, board):
+        self.power.show_targets(self, board)
+
         
     def draw(self, width, height, window, tier):
         s_amount = 8

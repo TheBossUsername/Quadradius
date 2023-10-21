@@ -9,6 +9,7 @@ class Square:
         self.col = col
         self.selected = selected
         self.power = None
+        self.targeted = False
 
     def draw_square(self, width, height, window, tier, timer):
         s_amount = 8
@@ -20,6 +21,7 @@ class Square:
         side_color = (tier * 40, tier * 40, tier * 40)
         top_color = (40 + (tier * 40), 40 + (tier * 40), 40 + (tier * 40))
         red_color = (tier * 63.75, 0, 0)
+        targeted_color = (0, 200 + (tier * 11), 0)
 
         padd = height // 400
         if padd < 2:
@@ -48,7 +50,11 @@ class Square:
                         pygame.draw.line(window, BLACK, (x - ((tier - 1) * s_height) + size, y - ((tier - 1) * s_height) + size),(x - ((tier - 1) * s_height), y - ((tier - 1) * s_height) + size), l_thick -1)
                 
                     # Draw top
-                    if self.selected and self.height == tier + 1:
+                    if self.targeted:
+                        pygame.draw.rect(window, BLACK, (x - (tier * s_height), y - (tier * s_height), size, size)) 
+                        pygame.draw.rect(window, targeted_color, (x - (tier * s_height) + padd, y - (tier * s_height) + padd, size - (padd * 2), size - (padd * 2)))
+                        pygame.draw.rect(window, top_color, (x - (tier * s_height) + padd * 2, y - (tier * s_height) + padd * 2, size - (padd * 4), size - (padd * 4)))
+                    elif self.selected and self.height == tier + 1:
                         pygame.draw.rect(window, CYAN, (x - (tier * s_height), y - (tier * s_height), size, size)) 
                         pygame.draw.rect(window, top_color, (x - (tier * s_height) + padd * 2, y - (tier * s_height) + padd * 2, size - (padd * 4), size - (padd * 4)))
                     else:
@@ -66,7 +72,11 @@ class Square:
 
             else:
                 # Draw top
-                if self.selected and self.height == tier + 1:
+                if self.targeted:
+                    pygame.draw.rect(window, BLACK, (x - (tier * s_height), y - (tier * s_height), size, size)) 
+                    pygame.draw.rect(window, targeted_color, (x - (tier * s_height) + padd, y - (tier * s_height) + padd, size - (padd * 2), size - (padd * 2)))
+                    pygame.draw.rect(window, top_color, (x - (tier * s_height) + padd * 2, y - (tier * s_height) + padd * 2, size - (padd * 4), size - (padd * 4)))
+                elif self.selected and self.height == tier + 1:
                     pygame.draw.rect(window, CYAN, (x - (tier * s_height), y - (tier * s_height), size, size)) 
                     pygame.draw.rect(window, top_color, (x - (tier * s_height) + padd * 2, y - (tier * s_height) + padd * 2, size - (padd * 4), size - (padd * 4)))
                 else:

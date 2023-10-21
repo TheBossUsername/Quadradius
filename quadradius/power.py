@@ -7,84 +7,131 @@ class Power:
 
     def __init__(self):
         self.type = randint(1, total)
-        self.description = self.get_description(self.type)
     
-    def get_description(self, type):
+    def get_name(self):
 
-        if type == 1:
+        if self.type == 1:
             return ("Wall column")
         
-        if type == 2:
+        if self.type == 2:
             return ("Wall Row")
         
-        if type == 3:
+        if self.type == 3:
             return ("Plateau")
         
-        if type == 4:
+        if self.type == 4:
             return ("Trench column")
         
-        if type == 5:
+        if self.type == 5:
             return ("Trench Row")
         
-        if type == 6:
+        if self.type == 6:
             return ("Moat")
         
-        if type == 7:
+        if self.type == 7:
             return ("Grow Quadradius")
         
-        if type == 8:
+        if self.type == 8:
             return ("Lower Tile")
         
-        if type == 9:
+        if self.type == 9:
             return ("Raise Tile")
         
-        if type == 10:
+        if self.type == 10:
             return ("Jump Proof")
         
-        if type == 11:
+        if self.type == 11:
             return ("Climb")
         
-        if type == 12:
+        if self.type == 12:
             return ("Dredge Column")
         
-        if type == 13:
+        if self.type == 13:
             return ("Dredge Row")
         
-        if type == 14:
+        if self.type == 14:
             return ("Dredge Radial")
         
-        if type == 15:
+        if self.type == 15:
             return ("Move Diagonal")
         
-        if type == 16:
+        if self.type == 16:
             return ("Multiply")
         
-        if type == 17:
+        if self.type == 17:
             return ("Invert Column")
         
-        if type == 18:
+        if self.type == 18:
             return ("Invert Row")
         
-        if type == 19:
+        if self.type == 19:
             return ("Invert Radial")
         
-        if type == 20:
+        if self.type == 20:
             return ("Kamikaze Column")
         
-        if type == 21:
+        if self.type == 21:
             return ("Kamikaze Row")
         
-        if type == 22:
+        if self.type == 22:
             return ("Kamikaze Radial")
         
-        if type == 23:
+        if self.type == 23:
             return ("Destroy Column")
         
-        if type == 24:
+        if self.type == 24:
             return ("Destroy Row")
         
-        if type == 25:
+        if self.type == 25:
             return ("Destroy Radial")
+        
+    def show_targets(self, piece, board):
+        # Columns
+        if self.type == 1 or self.type == 4 or self.type == 12 or self.type == 17 or self.type == 20 or self.type == 23:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.col + r >= 0 and piece.col + r <= 7:
+                        for x in range(8):
+                            square = board.squares[x][piece.col + r]
+                            square.targeted = True
+            else:
+                for x in range(8):
+                    square = board.squares[x][piece.col]
+                    square.targeted = True
+        
+        # Rows
+        if self.type == 2 or self.type == 5 or self.type == 13 or self.type == 18 or self.type == 21 or self.type == 24:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.row + r >= 0 and piece.row + r <= 7:
+                        for square in board.squares[piece.row + r]:
+                            square.targeted = True
+            else:
+                for square in board.squares[piece.row]:
+                    square.targeted = True
+
+        # Radials
+        if self.type == 3 or self.type == 6 or self.type == 14 or self.type == 19 or self.type == 22 or self.type == 25:
+            t1 = piece.traits.count(1)
+
+            if t1 > 0:
+                for x in range(-t1 -1 , t1 + 2):
+                    for y in range(-t1 - 1, t1 + 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            square = board.squares[piece.row + y][piece.col + x]
+                            square.targeted = True
+            else:
+                for x in range(-1 , 2):
+                    for y in range(-1 , 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            square = board.squares[piece.row + y][piece.col + x]
+                            square.targeted = True
+
+        #Powers
+        if self.type == 7 or self.type == 8 or self.type == 9 or self.type == 10 or self.type == 11 or self.type == 15 or self.type == 16:
+            board.squares[piece.row][piece.col].targeted = True
 
     def use(self, piece, board):
         # Wall column

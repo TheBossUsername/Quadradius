@@ -142,7 +142,7 @@ class Game:
 
                     if event.key == pygame.K_SPACE:
                         if use_power:
-                            text = (f"Use: {selected_piece.power.description}? Confirm: Z Back: X")
+                            text = (f"Use: {selected_piece.get_name()}? Confirm: Z Back: X")
                         else:
                             if selected_piece == None:
                                 selected_piece = board.select_piece()
@@ -151,7 +151,7 @@ class Game:
                                     selected_piece = board.de_select_piece()
                                 elif selected_piece.player == turn:
                                     if selected_piece.power != None:
-                                        text = (f"Move: Space bar, {selected_piece.power.description}: Z, Back: X")
+                                        text = (f"Move: Space bar, {selected_piece.get_name()}: Z, Back: X")
                                     else:
                                         text = ("Move: Space bar, Back: X")
                                 elif selected_piece.player != turn:
@@ -194,9 +194,14 @@ class Game:
                                     selected_piece = board.de_select_piece()
                                     turn_end = True
                                 else:
-                                    text = (f"Use: {selected_piece.power.description}? Confirm: Z Back: X")
+                                    text = (f"Use: {selected_piece.get_name()}? Confirm: Z Back: X")
                                     use_power = True
 
+            if use_power:
+                selected_piece.show_targets(board)
+            else:
+                board.de_target_squares()
+            
 
             
             if turn_end:

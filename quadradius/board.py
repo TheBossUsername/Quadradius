@@ -32,6 +32,12 @@ class Board:
                     self.pieces[row].append(Piece(row, col, False, 1))
                 else:
                     self.pieces[row].append(None)
+
+    def de_target_squares(self):
+        for row in range(ROWS):
+            for col in range(COLS):
+                square = self.squares[row][col]
+                square.targeted = False
                 
     def draw(self, window, width, height, timer):
         window.fill(BLACK)
