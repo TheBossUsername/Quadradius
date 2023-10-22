@@ -87,7 +87,7 @@ class Power:
         
     def show_targets(self, piece, board):
         # Columns
-        if self.type == 1 or self.type == 4 or self.type == 12 or self.type == 17 or self.type == 20 or self.type == 23:
+        if self.type == 1 or self.type == 4 or self.type == 17:
             t1 = piece.traits.count(1)
             if t1 > 0:
                 for r in range(-t1, t1 + 1):
@@ -101,7 +101,7 @@ class Power:
                     square.targeted = True
         
         # Rows
-        if self.type == 2 or self.type == 5 or self.type == 13 or self.type == 18 or self.type == 21 or self.type == 24:
+        if self.type == 2 or self.type == 5 or self.type == 18:
             t1 = piece.traits.count(1)
             if t1 > 0:
                 for r in range(-t1, t1 + 1):
@@ -113,7 +113,7 @@ class Power:
                     square.targeted = True
 
         # Radials
-        if self.type == 3 or self.type == 6 or self.type == 14 or self.type == 19 or self.type == 22 or self.type == 25:
+        if self.type == 3 or self.type == 6 or self.type == 19:
             t1 = piece.traits.count(1)
 
             if t1 > 0:
@@ -132,6 +132,163 @@ class Power:
         #Powers
         if self.type == 7 or self.type == 8 or self.type == 9 or self.type == 10 or self.type == 11 or self.type == 15 or self.type == 16:
             board.squares[piece.row][piece.col].targeted = True
+
+        # Friendly Columns
+        if False:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.col + r >= 0 and piece.col + r <= 7:
+                        for x in range(8):
+                            if board.pieces[x][piece.col + r] != None:
+                                if board.pieces[x][piece.col].player == piece.player:
+                                    square = board.squares[x][piece.col]
+                                    square.targeted = True
+            else:
+                for x in range(8):
+                    if board.pieces[x][piece.col] != None:
+                        if board.pieces[x][piece.col].player == piece.player:
+                            square = board.squares[x][piece.col]
+                            square.targeted = True
+        
+        # Friendly Rows
+        if False:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.row + r >= 0 and piece.row + r <= 7:
+                        for square in board.squares[piece.row + r]:
+                            if board.pieces[square.row][square.col] != None:
+                                if board.pieces[square.row][square.col].player == piece.player:
+                                    square.targeted = True
+            else:
+                for square in board.squares[piece.row]:
+                    if board.pieces[square.row][square.col] != None:
+                        if board.pieces[square.row][square.col].player == piece.player:
+                            square.targeted = True
+
+        # Friendly Radials
+        if False:
+            t1 = piece.traits.count(1)
+
+            if t1 > 0:
+                for x in range(-t1 -1 , t1 + 2):
+                    for y in range(-t1 - 1, t1 + 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            if board.pieces[piece.row + y][piece.col + x] != None:
+                                if board.pieces[piece.row + y][piece.col + x].player == piece.player:
+                                    square = board.squares[piece.row + y][piece.col + x]
+                                    square.targeted = True
+            else:
+                for x in range(-1 , 2):
+                    for y in range(-1 , 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            if board.pieces[piece.row + y][piece.col + x] != None:
+                                if board.pieces[piece.row + y][piece.col + x].player == piece.player:
+                                    square = board.squares[piece.row + y][piece.col + x]
+                                    square.targeted = True
+
+        # Enemy Columns
+        if self.type == 23:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.col + r >= 0 and piece.col + r <= 7:
+                        for x in range(8):
+                            if board.pieces[x][piece.col + r] != None:
+                                if board.pieces[x][piece.col].player != piece.player:
+                                    square = board.squares[x][piece.col]
+                                    square.targeted = True
+            else:
+                for x in range(8):
+                    if board.pieces[x][piece.col] != None:
+                        if board.pieces[x][piece.col].player != piece.player:
+                            square = board.squares[x][piece.col]
+                            square.targeted = True
+        
+        # Enemy Rows
+        if self.type == 24:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.row + r >= 0 and piece.row + r <= 7:
+                        for square in board.squares[piece.row + r]:
+                            if board.pieces[square.row][square.col] != None:
+                                if board.pieces[square.row][square.col].player != piece.player:
+                                    square.targeted = True
+            else:
+                for square in board.squares[piece.row]:
+                    if board.pieces[square.row][square.col] != None:
+                        if board.pieces[square.row][square.col].player != piece.player:
+                            square.targeted = True
+
+        # Enemy Radials
+        if self.type == 25:
+            t1 = piece.traits.count(1)
+
+            if t1 > 0:
+                for x in range(-t1 -1 , t1 + 2):
+                    for y in range(-t1 - 1, t1 + 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            if board.pieces[piece.row + y][piece.col + x] != None:
+                                if board.pieces[piece.row + y][piece.col + x].player != piece.player:
+                                    square = board.squares[piece.row + y][piece.col + x]
+                                    square.targeted = True
+            else:
+                for x in range(-1 , 2):
+                    for y in range(-1 , 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            if board.pieces[piece.row + y][piece.col + x] != None:
+                                if board.pieces[piece.row + y][piece.col + x].player != piece.player:
+                                    square = board.squares[piece.row + y][piece.col + x]
+                                    square.targeted = True
+        # All Columns
+        if self.type == 12 or self.type == 20:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.col + r >= 0 and piece.col + r <= 7:
+                        for x in range(8):
+                            if board.pieces[x][piece.col + r] != None:
+                                square = board.squares[x][piece.col]
+                                square.targeted = True
+            else:
+                for x in range(8):
+                    if board.pieces[x][piece.col] != None:
+                        square = board.squares[x][piece.col]
+                        square.targeted = True
+        
+        # All Rows
+        if self.type == 13 or self.type == 21:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.row + r >= 0 and piece.row + r <= 7:
+                        for square in board.squares[piece.row + r]:
+                            if board.pieces[square.row][square.col] != None:
+                                square.targeted = True
+            else:
+                for square in board.squares[piece.row]:
+                    if board.pieces[square.row][square.col] != None:
+                        square.targeted = True
+
+        # All Radials
+        if self.type == 14 or self.type == 22:
+            t1 = piece.traits.count(1)
+
+            if t1 > 0:
+                for x in range(-t1 -1 , t1 + 2):
+                    for y in range(-t1 - 1, t1 + 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            square = board.squares[piece.row + y][piece.col + x]
+                            square.targeted = True
+            else:
+                for x in range(-1 , 2):
+                    for y in range(-1 , 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            if board.pieces[piece.row + y][piece.col + x] != None:
+                                square = board.squares[piece.row + y][piece.col + x]
+                                square.targeted = True
 
     def use(self, piece, board):
         # Wall column
@@ -441,11 +598,16 @@ class Power:
                 for r in range(-t1, t1 + 1):
                     if piece.col + r >= 0 and piece.col + r <= 7:
                         for x in range(8):
-                            board.pieces[x][piece.col + r] = None
-
+                            square = board.squares[x][piece.col + r]
+                            tp = board.pieces[square.row][square.col]
+                            if tp != None:
+                                board.pieces[square.row][square.col] = None
             else:
                 for x in range(8):
-                    board.pieces[x][piece.col] = None
+                    square = board.squares[x][piece.col]
+                    tp = board.pieces[square.row][square.col]
+                    if tp != None:
+                        board.pieces[square.row][square.col] = None
         
         # Kamikaze Row
         if self.type == 21:
@@ -453,11 +615,15 @@ class Power:
             if t1 > 0:
                 for r in range(-t1, t1 + 1):
                     if piece.row + r >= 0 and piece.row + r <= 7:
-                        for j in range(0,8):
-                            board.pieces[piece.row][j] = None
+                        for square in board.squares[piece.row + r]:
+                            tp = board.pieces[square.row][square.col]
+                            if tp != None:
+                                board.pieces[square.row][square.col] = None
             else:
-                for j in range(0,8):
-                    board.pieces[piece.row][j] = None
+                for square in board.squares[piece.row]:
+                    tp = board.pieces[square.row][square.col]
+                    if tp != None:
+                        board.pieces[square.row][square.col] = None
                     
 
         # Kamikaze Radial
@@ -468,13 +634,20 @@ class Power:
                 for x in range(-t1 -1 , t1 + 2):
                     for y in range(-t1 - 1, t1 + 2):
                         if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
-                            board.pieces[piece.row + y][piece.col + x] = None
-                            
+                            square = board.squares[piece.row + y][piece.col + x]
+                            tp = board.pieces[square.row][square.col]
+                            if tp != None:
+                                board.pieces[square.row][square.col] = None
+                                    
+
             else:
                 for x in range(-1 , 2):
                     for y in range(-1 , 2):
                         if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
-                            board.pieces[piece.row + y][piece.col + x] = None
+                            square = board.squares[piece.row + y][piece.col + x]
+                            tp = board.pieces[square.row][square.col]
+                            if tp != None:
+                                board.pieces[square.row][square.col] = None
 
         # Destroy Column
         if self.type == 23:
@@ -483,15 +656,18 @@ class Power:
                 for r in range(-t1, t1 + 1):
                     if piece.col + r >= 0 and piece.col + r <= 7:
                         for x in range(8):
-                            if board.pieces[x][piece.col + r] != None:
-                                if board.pieces[x][piece.col + r].player != piece.player:
-                                    board.pieces[x][piece.col + r] = None
-
+                            square = board.squares[x][piece.col + r]
+                            tp = board.pieces[square.row][square.col]
+                            if tp != None:
+                                if tp.player != piece.player:
+                                    board.pieces[square.row][square.col] = None
             else:
                 for x in range(8):
-                    if board.pieces[x][piece.col] != None:
-                        if board.pieces[x][piece.col].player != piece.player:
-                            board.pieces[x][piece.col] = None
+                    square = board.squares[x][piece.col]
+                    tp = board.pieces[square.row][square.col]
+                    if tp != None:
+                        if tp.player != piece.player:
+                            board.pieces[square.row][square.col] = None
         
         # Destroy Row
         if self.type == 24:
@@ -499,15 +675,17 @@ class Power:
             if t1 > 0:
                 for r in range(-t1, t1 + 1):
                     if piece.row + r >= 0 and piece.row + r <= 7:
-                        for j in range(0,8):
-                            if board.pieces[piece.row + r][j] != None:
-                                if board.pieces[piece.row + r][j].player != piece.player:
-                                    board.pieces[piece.row + r][j] = None
+                        for square in board.squares[piece.row + r]:
+                            tp = board.pieces[square.row][square.col]
+                            if tp != None:
+                                if tp.player != piece.player:
+                                    board.pieces[square.row][square.col] = None
             else:
-                for j in range(0,8):
-                    if board.pieces[piece.row][j] != None:
-                        if board.pieces[piece.row][j].player != piece.player:
-                            board.pieces[piece.row][j] = None
+                for square in board.squares[piece.row]:
+                    tp = board.pieces[square.row][square.col]
+                    if tp != None:
+                        if tp.player != piece.player:
+                            board.pieces[square.row][square.col] = None
                     
 
         # Destroy Radial
@@ -518,15 +696,20 @@ class Power:
                 for x in range(-t1 -1 , t1 + 2):
                     for y in range(-t1 - 1, t1 + 2):
                         if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
-                            if board.pieces[piece.row + y][piece.col + x] != None:
-                                if board.pieces[piece.row + y][piece.col + x].player != piece.player:
-                                    board.pieces[piece.row + y][piece.col + x] = None
-                            
+                            square = board.squares[piece.row + y][piece.col + x]
+                            tp = board.pieces[square.row][square.col]
+                            if tp != None:
+                                if tp.player != piece.player:
+                                    board.pieces[square.row][square.col] = None
+                                    
+
             else:
                 for x in range(-1 , 2):
                     for y in range(-1 , 2):
                         if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
-                            if board.pieces[piece.row + y][piece.col + x] != None:
-                                if board.pieces[piece.row + y][piece.col + x].player != piece.player:
-                                    board.pieces[piece.row + y][piece.col + x] = None
+                            square = board.squares[piece.row + y][piece.col + x]
+                            tp = board.pieces[square.row][square.col]
+                            if tp != None:
+                                if tp.player != piece.player:
+                                    board.pieces[square.row][square.col] = None
                             
