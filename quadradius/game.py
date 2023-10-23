@@ -83,7 +83,7 @@ class Game:
                 square = board.squares[row][col]
                 piece = board.pieces[row][col]
                 if square.power != None and piece != None:
-                    if len(piece.powers) > 3:
+                    if len(piece.powers) >= 3:
                         del piece.powers[0]
                     piece.powers.append(square.power)
                     square.power = None

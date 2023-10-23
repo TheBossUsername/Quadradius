@@ -94,6 +94,9 @@ class Board:
             if 5 in selected_piece.traits: 
                 self.pieces[selected_piece.row][selected_piece.col], self.pieces[new_row][new_col] = Piece(selected_piece.row, selected_piece.col, False, selected_piece.player), self.pieces[selected_piece.row][selected_piece.col]
                 selected_piece.traits.remove(5)
+                if len(selected_piece.traits) != 0:
+                    for x in selected_piece.traits:
+                        self.pieces[selected_piece.row][selected_piece.col].traits.append(x)
             else:
                 self.pieces[selected_piece.row][selected_piece.col], self.pieces[new_row][new_col] = None, self.pieces[selected_piece.row][selected_piece.col]
             selected_piece.move(new_row, new_col)
