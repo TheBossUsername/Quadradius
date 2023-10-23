@@ -250,7 +250,7 @@ class Power:
                     if piece.col + r >= 0 and piece.col + r <= 7:
                         for x in range(8):
                             if board.pieces[x][piece.col + r] != None:
-                                square = board.squares[x][piece.col]
+                                square = board.squares[x][piece.col + r]
                                 square.targeted = True
             else:
                 for x in range(8):
