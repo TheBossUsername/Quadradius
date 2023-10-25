@@ -2,7 +2,7 @@ from random import randint
 from .constants import *
 
 
-total = 25
+total = 28
 class Power:
 
     def __init__(self):
@@ -84,6 +84,15 @@ class Power:
         
         if self.type == 25:
             return ("Destroy Radial")
+        
+        if self.type == 26:
+            return ("Pillage Column")
+        
+        if self.type == 27:
+            return ("Pillage Row")
+        
+        if self.type == 28:
+            return ("Pillage Radial")
         
     def show_targets(self, piece, board):
         # Columns
@@ -189,7 +198,7 @@ class Power:
                                     square.targeted = True
 
         # Enemy Columns
-        if self.type == 23:
+        if self.type == 23 or self.type == 26:
             t1 = piece.traits.count(1)
             if t1 > 0:
                 for r in range(-t1, t1 + 1):
@@ -207,7 +216,7 @@ class Power:
                             square.targeted = True
         
         # Enemy Rows
-        if self.type == 24:
+        if self.type == 24 or self.type == 27:
             t1 = piece.traits.count(1)
             if t1 > 0:
                 for r in range(-t1, t1 + 1):
@@ -223,7 +232,7 @@ class Power:
                             square.targeted = True
 
         # Enemy Radials
-        if self.type == 25:
+        if self.type == 25 or self.type == 28:
             t1 = piece.traits.count(1)
 
             if t1 > 0:
@@ -712,4 +721,92 @@ class Power:
                             if tp != None:
                                 if tp.player != piece.player:
                                     board.pieces[square.row][square.col] = None
+
+        # Pillage Column
+        if self.type == 26:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.col + r >= 0 and piece.col + r <= 7:
+                        for x in range(8):
+                            square = board.squares[x][piece.col + r]
+                            tp = board.pieces[square.row][square.col]
+                            if tp != None:
+                                if tp.player != piece.player:
+                                    for x in range(len(tp.powers)):
+                                        if len(board.pieces[piece.row][piece.col].powers) >= 3:
+                                            del piece.powers[0]
+                                        board.pieces[piece.row][piece.col].powers.append(tp.powers[x])
+                                    tp.powers = []
+            else:
+                for x in range(8):
+                    square = board.squares[x][piece.col]
+                    tp = board.pieces[square.row][square.col]
+                    if tp != None:
+                        if tp.player != piece.player:
+                            for x in range(len(tp.powers)):
+                                if len(board.pieces[piece.row][piece.col].powers) >= 3:
+                                    del piece.powers[0]
+                                board.pieces[piece.row][piece.col].powers.append(tp.powers[x])
+                            tp.powers = []
+
+        # Pillage Row
+        if self.type == 27:
+            t1 = piece.traits.count(1)
+            if t1 > 0:
+                for r in range(-t1, t1 + 1):
+                    if piece.row + r >= 0 and piece.row + r <= 7:
+                        for square in board.squares[piece.row + r]:
+                            tp = board.pieces[square.row][square.col]
+                            if tp != None:
+                                if tp.player != piece.player:
+                                    for x in range(len(tp.powers)):
+                                        if len(board.pieces[piece.row][piece.col].powers) >= 3:
+                                            del piece.powers[0]
+                                        board.pieces[piece.row][piece.col].powers.append(tp.powers[x])
+                                    tp.powers = []
+            else:
+                for square in board.squares[piece.row]:
+                    tp = board.pieces[square.row][square.col]
+                    if tp != None:
+                        if tp.player != piece.player:
+                            for x in range(len(tp.powers)):
+                                if len(board.pieces[piece.row][piece.col].powers) >= 3:
+                                    del piece.powers[0]
+                                board.pieces[piece.row][piece.col].powers.append(tp.powers[x])
+                            tp.powers = []
+                    
+
+        # Destroy Radial
+        if self.type == 28:
+            t1 = piece.traits.count(1)
+
+            if t1 > 0:
+                for x in range(-t1 -1 , t1 + 2):
+                    for y in range(-t1 - 1, t1 + 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            square = board.squares[piece.row + y][piece.col + x]
+                            tp = board.pieces[square.row][square.col]
+                            if tp != None:
+                                if tp.player != piece.player:
+                                    for x in range(len(tp.powers)):
+                                        if len(board.pieces[piece.row][piece.col].powers) >= 3:
+                                            del piece.powers[0]
+                                        board.pieces[piece.row][piece.col].powers.append(tp.powers[x])
+                                    tp.powers = []
+                                    
+
+            else:
+                for x in range(-1 , 2):
+                    for y in range(-1 , 2):
+                        if (piece.row + y) >= 0 and (piece.row + y) <= 7 and (piece.col + x) >= 0 and (piece.col + x) <= 7:
+                            square = board.squares[piece.row + y][piece.col + x]
+                            tp = board.pieces[square.row][square.col]
+                            if tp != None:
+                                if tp.player != piece.player:
+                                    for x in range(len(tp.powers)):
+                                        if len(board.pieces[piece.row][piece.col].powers) >= 3:
+                                            del piece.powers[0]
+                                        board.pieces[piece.row][piece.col].powers.append(tp.powers[x])
+                                    tp.powers = []
                             
