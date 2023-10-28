@@ -1,8 +1,8 @@
-from random import randint
+from random import randint, choice
 from .constants import *
 
 
-total = 28
+total = 29
 class Power:
 
     def __init__(self):
@@ -93,6 +93,9 @@ class Power:
         
         if self.type == 28:
             return ("Pillage Radial")
+        
+        if self.type == 29:
+            return ("Relocate")
         
     def show_targets(self, piece, board):
         # Columns
@@ -809,4 +812,18 @@ class Power:
                                             del piece.powers[0]
                                         board.pieces[piece.row][piece.col].powers.append(tp.powers[x])
                                     tp.powers = []
+            
+        # Relocate
+        if self.type == 29:
+            potential = []
+            for row in range(ROWS):
+                for col in range(COLS):
+                    square = board.squares[row][col]
+                    tp = board.pieces[row][col]
+                    if tp == None:
+                        potential.append(square)
+            if len(potential) != 0:
+                chosen = choice(potential)
+                board.pieces[piece.row][piece.col], board.pieces[chosen.row][chosen.col] = None, board.pieces[piece.row][piece.col]
+                piece.move(chosen.row, chosen.col)
                             
