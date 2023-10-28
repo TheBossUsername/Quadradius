@@ -1,6 +1,6 @@
 import socket
 import pygame
-from common_files.board import *
+from classes.board import Board
 
 # Server configuration
 server_ip = '0.0.0.0'  # Use the IP address of the server

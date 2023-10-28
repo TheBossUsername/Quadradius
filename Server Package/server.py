@@ -1,6 +1,6 @@
 import socket
 import threading
-from common_files.game import Game
+from classes.game import Game
 import random
 
 # Server configuration
@@ -15,8 +15,6 @@ server_socket.listen(2)  # Allow up to 2 players to connect
 # List to store connected clients
 clients = []
 current_turn = None
-
-game = Game()
 
 def handle_client(client_socket):
     global current_turn
@@ -35,6 +33,7 @@ def main():
     print(f"Server listening on {server_ip}:{server_port}")
 
     while len(clients) < 2:
+        print("waiting")
         client, addr = server_socket.accept()
         clients.append(client)
         print(f"Connected to {addr[0]}:{addr[1]}")
