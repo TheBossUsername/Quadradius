@@ -122,15 +122,6 @@ class Board:
         else:
             return old_square
         
-    def spawn_power(self):
-        potential = []
-        for row in range(ROWS):
-            for col in range(COLS):
-                square = self.squares[row][col]
-                piece = self.pieces[row][col]
-                if piece == None and square.power == None:
-                    potential.append(square)
-        if len(potential) != 0:
-            chosen = choice(potential)
-            self.squares[chosen.row][chosen.col].power = Power()
+    def spawn_power(self, row, col, type):
+        self.squares[row][col].power = Power()
                 
