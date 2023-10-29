@@ -1,6 +1,7 @@
 import socket
 import pygame
 from classes.board import Board
+from classes.game import Game
 
 # Server configuration
 server_ip = '10.50.169.241'  # Use the IP address of the server
@@ -11,6 +12,8 @@ client_socket.connect((server_ip, server_port))
 
 def send_player_input(data):
     client_socket.send(data.encode())
+
+game = Game()
 
 def main():
     running = True
