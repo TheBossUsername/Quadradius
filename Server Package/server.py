@@ -81,8 +81,8 @@ def handle_client(client_socket, board):
                 selected_piece = board.pieces[int(piece_row)][int(piece_col)]
                 selected_square = board.squares[int(square_row)][int(square_col)]
                 if legal_move(selected_piece, selected_square, board):
-                    board.move_piece(selected_piece, selected_square)
                     send_data = f"MOVE:{selected_piece.row}:{selected_piece.col}:{selected_square.row}:{selected_square.col}"
+                    board.move_piece(selected_piece, selected_square)
                     for c in clients:
                         c.send(send_data.encode())
                     time.sleep(1)
