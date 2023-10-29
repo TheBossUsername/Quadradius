@@ -20,44 +20,6 @@ class Game:
         pygame.time.set_timer(pygame.USEREVENT, 100)
 
 
-    def legal_move(self, selected_piece, selected_square, board):
-        tq = selected_square
-        sp = selected_piece
-        sq = board.squares[sp.row][sp.col]
-        tp = board.pieces[tq.row][tq.col]
-
-        if 3 not in sp.traits:
-            if (tq.height - sq.height) >= 2:
-                return False
-        
-        if tp != None:
-            if tp.player == sp.player:
-                return False
-            if 2 in tp.traits:
-                return False
-        
-            
-        if (tq.row, tq.col) == (sp.row + 1, sp.col):
-            return True
-        elif (tq.row, tq.col) == (sp.row - 1, sp.col):
-            return True
-        elif (tq.row, tq.col) == (sp.row, sp.col + 1):
-            return True
-        elif (tq.row, tq.col) == (sp.row, sp.col - 1):
-            return True
-        elif 4 in sp.traits:
-            if (tq.row, tq.col) == (sp.row + 1, sp.col + 1):
-                return True
-            elif (tq.row, tq.col) == (sp.row - 1, sp.col + 1):
-                return True
-            elif (tq.row, tq.col) == (sp.row - 1, sp.col - 1):
-                return True
-            elif (tq.row, tq.col) == (sp.row + 1, sp.col - 1):
-                return True
-            else:
-                return False
-        else:
-            return False
 
     def check_win(self, board):
         pieces_1 = 0

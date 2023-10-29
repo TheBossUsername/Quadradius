@@ -73,36 +73,21 @@ class Board:
         return None
 
 
-    def move_piece(self):
+    def move_piece(self, selected_piece, selected_square):
 
-        for row in range(ROWS):
-            for col in range(COLS):
-                square = self.squares[row][col]
-                if square.selected:
-                    selected = square
-        new_row = selected.row
-        new_col = selected.col
+        new_row = selected_square.row
+        new_col = selected_square.col
 
-        for row in range(ROWS):
-            for col in range(COLS):
-                piece = self.pieces[row][col]
-                if piece != None:
-                    if piece.selected:
-                        selected_piece = piece
-
-        if new_row >= 0 and new_col >= 0 and new_row < ROWS and new_col < COLS:
-            if 5 in selected_piece.traits: 
-                self.pieces[selected_piece.row][selected_piece.col], self.pieces[new_row][new_col] = Piece(selected_piece.row, selected_piece.col, False, selected_piece.player), self.pieces[selected_piece.row][selected_piece.col]
-                selected_piece.traits.remove(5)
-                if len(selected_piece.traits) != 0:
-                    for x in selected_piece.traits:
-                        self.pieces[selected_piece.row][selected_piece.col].traits.append(x)
-            else:
-                self.pieces[selected_piece.row][selected_piece.col], self.pieces[new_row][new_col] = None, self.pieces[selected_piece.row][selected_piece.col]
-            selected_piece.move(new_row, new_col)
+        if 5 in selected_piece.traits: 
+            self.pieces[selected_piece.row][selected_piece.col], self.pieces[new_row][new_col] = Piece(selected_piece.row, selected_piece.col, False, selected_piece.player), self.pieces[selected_piece.row][selected_piece.col]
+            selected_piece.traits.remove(5)
+            if len(selected_piece.traits) != 0:
+                for x in selected_piece.traits:
+                    self.pieces[selected_piece.row][selected_piece.col].traits.append(x)
         else:
-            print("Can not go there")
-            pass
+            self.pieces[selected_piece.row][selected_piece.col], self.pieces[new_row][new_col] = None, self.pieces[selected_piece.row][selected_piece.col]
+        selected_piece.move(new_row, new_col)
+
 
     def get_selected_square(self):
         for row in range(ROWS):

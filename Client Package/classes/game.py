@@ -6,12 +6,12 @@ from .board import Board
 from random import randint
 from time import sleep
 from .power import Power
-from server import Server
+from server import Client
 
 class Game:
 
     def __init__(self, server_ip, server_port):
-        self.server = 
+        self.server = Client(server_ip, server_port)
         self.width = 800
         self.height = 800
         self.clock = pygame.time.Clock()
@@ -20,8 +20,6 @@ class Game:
         pygame.display.set_caption('Quadradius')
         pygame.init()
         pygame.time.set_timer(pygame.USEREVENT, 100)
-
-    def set_server(server_ip, server_port):
 
 
     def legal_move(self, selected_piece, selected_square, board):
@@ -97,7 +95,7 @@ class Game:
     def run_game(self):
         board = Board()
 
-        turn_end = True
+        your_turn = False
         spawn = 10
         use_power = False
         selected_piece = None
@@ -122,95 +120,107 @@ class Game:
                 if event.type == pygame.USEREVENT:
                     timer += 1
                     
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        if use_power:
-                            pass
-                        else:
-                            selected_square = board.move_selected_square(selected_square, 1)
+                if your_turn:
+                    text = "It's your Turn"
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_UP:
+                            if use_power:
+                                pass
+                            else:
+                                selected_square = board.move_selected_square(selected_square, 1)
 
-                    if event.key == pygame.K_RIGHT:
-                        if use_power:
-                            if selected_power < len(selected_piece.powers) - 1:
-                                selected_power += 1
-                                board.de_target_squares()
-                            pass
-                        else:
-                            selected_square = board.move_selected_square(selected_square, 2)
+                        if event.key == pygame.K_RIGHT:
+                            if use_power:
+                                if selected_power < len(selected_piece.powers) - 1:
+                                    selected_power += 1
+                                    board.de_target_squares()
+                                pass
+                            else:
+                                selected_square = board.move_selected_square(selected_square, 2)
 
-                    if event.key == pygame.K_DOWN:
-                        if use_power:
-                            pass
-                        else:
-                            selected_square = board.move_selected_square(selected_square, 3)
+                        if event.key == pygame.K_DOWN:
+                            if use_power:
+                                pass
+                            else:
+                                selected_square = board.move_selected_square(selected_square, 3)
 
-                    if event.key == pygame.K_LEFT:
-                        if use_power:
-                            if selected_power > 0:
-                                selected_power -= 1
-                                board.de_target_squares()
-                            pass
-                        else:
-                            selected_square = board.move_selected_square(selected_square, 4)
+                        if event.key == pygame.K_LEFT:
+                            if use_power:
+                                if selected_power > 0:
+                                    selected_power -= 1
+                                    board.de_target_squares()
+                                pass
+                            else:
+                                selected_square = board.move_selected_square(selected_square, 4)
 
-                    if event.key == pygame.K_SPACE:
-                        if use_power:
-                            pass
-                        else:
-                            if selected_piece == None:
-                                selected_piece = board.select_piece()
+                        if event.key == pygame.K_SPACE:
+                            if use_power:
+                                pass
+                            else:
                                 if selected_piece == None:
-                                    text = ("No piece was selected")
-                                    selected_piece = board.de_select_piece()
-                                elif selected_piece.player == turn:
-                                    if len(selected_piece.powers) != 0:
-                                        text = (f"Move: Space bar, Powers: Z, Back: X")
+                                    selected_piece = board.select_piece()
+                                    if selected_piece == None:
+                                        text = ("No piece was selected")
+                                        selected_piece = board.de_select_piece()
+                                    elif selected_piece.player == turn:
+                                        if len(selected_piece.powers) != 0:
+                                            text = (f"Move: Space bar, Powers: Z, Back: X")
+                                        else:
+                                            text = ("Move: Space bar, Back: X")
+                                    elif selected_piece.player != turn:
+                                        text = ("This piece is not yours!")
+                                        selected_piece = board.de_select_piece()
                                     else:
-                                        text = ("Move: Space bar, Back: X")
-                                elif selected_piece.player != turn:
-                                    text = ("This piece is not yours!")
-                                    selected_piece = board.de_select_piece()
+                                        text = ("Error: Unknown thing selected")
+                                        selected_piece = board.de_select_piece()
+                                elif selected_piece != None:
+                                    data = f"MOVE:{selected_piece.row}:{selected_piece.col}:{selected_square.row}:{selected_square.col}"
+                                    self.server.send_player_input(data)     
+                                    
+                                        
                                 else:
-                                    text = ("Error: Unknown thing selected")
-                                    selected_piece = board.de_select_piece()
-                            elif selected_piece != None:
-                                if self.legal_move(selected_piece, selected_square, board):
-                                    board.move_piece()
-                                    selected_piece = board.de_select_piece()
-                                    turn_end = True
-                                else:
-                                    text = ("That is not a legal move, Back: X")
-                            else:
-                                text = ("ERROR with piece")
+                                    text = ("ERROR with piece")
 
-                    if event.key == pygame.K_x:
-                        selected_piece = board.de_select_piece()
-                        use_power = False
-                        selected_power = None
-                        if turn == 1:
-                            text = ("It is Red's turn")
-                        elif turn == 2:
-                            text = ("It is Blue's turn")
-                        else:
-                            text = (f"Error with turn counter value: {turn}")
-                    
-                    if event.key == pygame.K_z:
-                        if selected_piece == None:
-                            text = ("No piece was selected")
-                        elif selected_piece != None:
-                            if len(selected_piece.powers) == 0:
-                                text = ("This piece has no power")
-                            else:
-                                if use_power:
-                                    selected_piece.use_power(board, selected_power)
-                                    use_power = False
-                                    del selected_piece.powers[selected_power] 
-                                    selected_power = None
-                                    selected_piece = board.de_select_piece()
-                                    turn_end = True
+                        if event.key == pygame.K_x:
+                            selected_piece = board.de_select_piece()
+                            use_power = False
+                            selected_power = None
+                        
+                        if event.key == pygame.K_z:
+                            if selected_piece == None:
+                                text = ("No piece was selected")
+                            elif selected_piece != None:
+                                if len(selected_piece.powers) == 0:
+                                    text = ("This piece has no power")
                                 else:
-                                    selected_power = 0
-                                    use_power = True
+                                    if use_power:
+                                        selected_piece.use_power(board, selected_power)
+                                        use_power = False
+                                        del selected_piece.powers[selected_power] 
+                                        selected_power = None
+                                        selected_piece = board.de_select_piece()
+                                        end_turn = True
+                                    else:
+                                        selected_power = 0
+                                        use_power = True
+                else:
+                    text = "Oppenent's Turn"
+
+            data = self.server.recieve_server_update()
+            if not data:
+                break
+            elif data == "NOT_LEGAL":
+                text = ("That is not a legal move, Back: X")
+            elif data == "MOVE":
+                board.move_piece()
+                selected_piece = board.de_select_piece()
+            elif data == "END_TURN":
+                your_turn = False
+            elif data == "YOUR_TURN":
+                your_turn = True
+
+            
+
 
             if use_power:
                 selected_piece.show_targets(selected_power, board)
@@ -219,16 +229,7 @@ class Game:
             
 
             
-            if turn_end:
-                if turn == 1:
-                    turn = 2
-                    text = ("It is Blue's turn")
-                elif turn == 2:
-                    turn = 1
-                    text = ("It is Red's turn")
-                else:
-                    text = (f"Error with turn counter value: {turn}")     
-                turn_end = False 
+            if end_turn:
                 chance = randint(1, spawn)
                 if chance == 1:
                     board.spawn_power()
