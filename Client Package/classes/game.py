@@ -165,10 +165,8 @@ class Game:
                                         use_power = True
                 else:
                     text = "Oppenent's Turn"
-
-            print("Right before recieving data")
             data = self.server.recieve_server_update()
-            print("Right after recieving data")
+            print(f"recived data {data}")
             if not data:
                 pass
             elif data == "NOT_LEGAL":
