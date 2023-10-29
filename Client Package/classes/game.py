@@ -66,7 +66,7 @@ class Game:
         if turn == 1:
             text = ("It is Red's Turn")
         elif turn == 2:
-            text = ("It is Blues's Turn")
+            text = ("It is Blue's Turn")
         else:
             text = (f"Turn error turn : {turn}")
         
@@ -121,7 +121,7 @@ class Game:
                         if turn == 1:
                             text = ("It is Red's Turn")
                         elif turn == 2:
-                            text = ("It is Blues's Turn")
+                            text = ("It is Blue's Turn")
                         else:
                             text = (f"Turn error turn : {turn}")
 
@@ -160,7 +160,7 @@ class Game:
                             if turn == 1:
                                 text = ("It is Red's Turn")
                             elif turn == 2:
-                                text = ("It is Blues's Turn")
+                                text = ("It is Blue's Turn")
                             else:
                                 text = (f"Turn error turn : {turn}")
                         
@@ -185,7 +185,7 @@ class Game:
                         if turn == 1:
                             text = ("It is Red's Turn")
                         elif turn == 2:
-                            text = ("It is Blues's Turn")
+                            text = ("It is Blue's Turn")
                         else:
                             text = (f"Turn error turn : {turn}")
             data = self.server.recieve_server_update()
@@ -214,6 +214,12 @@ class Game:
                 your_turn = False
             elif data == "YOUR_TURN":
                 your_turn = True
+                if turn == 1:
+                    text = ("It is Red's Turn")
+                elif turn == 2:
+                    text = ("It is Blue's Turn")
+                else:
+                    text = (f"Turn error turn : {turn}")
 
 
             
