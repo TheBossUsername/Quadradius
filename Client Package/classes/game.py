@@ -170,7 +170,7 @@ class Game:
             data = self.server.recieve_server_update()
             print("Right after recieving data")
             if not data:
-                break
+                pass
             elif data == "NOT_LEGAL":
                 text = ("That is not a legal move, Back: X")
             elif data == "MOVE":
