@@ -85,13 +85,13 @@ def handle_client(client_socket, board):
                 selected_piece = board.pieces[int(piece_row)][int(piece_col)]
                 selected_square = board.squares[int(square_row)][int(square_col)]
                 if legal_move(selected_piece, selected_square, board):
-                    send_data = "END_TURN"
-                    current_turn.send(send_data.encode())
-                    time.sleep(1)
                     send_data = f"MOVE:{selected_piece.row}:{selected_piece.col}:{selected_square.row}:{selected_square.col}"
                     board.move_piece(selected_piece, selected_square)
                     for c in clients:
                         c.send(send_data.encode())
+                    time.sleep(1)
+                    send_data = "END_TURN"
+                    current_turn.send(send_data.encode())
                     time.sleep(1)
                     chance = random.randint(1, spawn)
                     if chance == 1:
@@ -107,6 +107,7 @@ def handle_client(client_socket, board):
                     current_turn = clients[turn_counter % 2]
                     send_data = "YOUR_TURN"
                     current_turn.send(send_data.encode()) 
+                    time.sleep(1)
                 else:
                     send_data = "NOT_LEGAL"
                     client_socket.send(send_data.encode())
