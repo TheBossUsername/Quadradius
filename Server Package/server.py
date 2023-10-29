@@ -65,26 +65,22 @@ def handle_client(client_socket, board):
     global turn_counter
     global current_turn
     global clients
-    send_data = "YOUR_TURN"
-    print(f"Sending {send_data} to {current_turn}")
-    current_turn.send(send_data.encode()) 
-    print(f"Sent {send_data} to {current_turn}")
     while True:
         data = client_socket.recv(1024).decode()
         if not data:
             break
-
         elif client_socket == current_turn:
-            message_parts = data.split(":", 1)
+            message_parts = data.split(":")
+            print(message_parts)
             if message_parts[0] == 'MOVE':
                 piece_row = message_parts[1]
                 piece_col = message_parts[2]
                 square_row = message_parts[3]
                 square_col = message_parts[4]
-                selected_piece = board.pieces[piece_row][piece_col]
-                selected_square = board.squares[square_row][square_col]
+                selected_piece = board.pieces[int(piece_row)][int(piece_col)]
+                selected_square = board.squares[int(square_row)][int(square_col)]
                 if legal_move(selected_piece, selected_square, board):
-                    board.move(selected_piece, selected_square)
+                    board.move_piece(selected_piece, selected_square)
                     send_data = "MOVE"
                     client_socket.send(send_data.encode())
                     send_data = "END_TURN"
@@ -117,7 +113,10 @@ def main():
     turn_counter = random.randint(1,2)
     print(f"Turn Counter: {turn_counter}")
     current_turn = clients[turn_counter % 2]
-    print(f"Current Turn: {current_turn}")
+    send_data = "YOUR_TURN"
+    print(f"Sending {send_data} to {current_turn}")
+    current_turn.send(send_data.encode()) 
+    print(f"Sent {send_data} to {current_turn}")
 
     for client in clients:
         client_handler = threading.Thread(target=handle_client, args=(client, board))

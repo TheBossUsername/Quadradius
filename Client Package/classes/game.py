@@ -81,7 +81,6 @@ class Game:
                     timer += 1
                     
                 if your_turn:
-                    text = "It's your Turn"
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
                             if use_power:
@@ -145,6 +144,7 @@ class Game:
                             selected_piece = board.de_select_piece()
                             use_power = False
                             selected_power = None
+                            text = "It's your Turn"
                         
                         if event.key == pygame.K_z:
                             if selected_piece == None:
@@ -179,6 +179,7 @@ class Game:
                 your_turn = False
             elif data == "YOUR_TURN":
                 your_turn = True
+                text = "It's your Turn"
 
             
 
