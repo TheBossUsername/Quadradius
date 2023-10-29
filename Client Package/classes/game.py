@@ -166,8 +166,9 @@ class Game:
                 else:
                     text = "Oppenent's Turn"
             data = self.server.recieve_server_update()
-            print(f"recived data {data}")
-            if not data:
+            if data != None:
+                print(f"recived data {data}")
+            if data == None:
                 pass
             elif data == "NOT_LEGAL":
                 text = ("That is not a legal move, Back: X")
@@ -216,7 +217,6 @@ class Game:
                 text_rect = text_surface.get_rect()
                 text_rect.center = (text_center)
                 self.window.blit(text_surface, text_rect)
-            print("Right before updating display")
             pygame.display.update()
             won = self.check_win(board)
             if won == 1 or won == 2:
