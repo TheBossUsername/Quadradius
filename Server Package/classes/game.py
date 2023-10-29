@@ -187,14 +187,7 @@ class Game:
                 else:
                     text = (f"Error with turn counter value: {turn}")     
                 turn_end = False 
-                chance = randint(1, spawn)
-                if chance == 1:
-                    board.spawn_power()
-                    spawn = 10
-                else:
-                    spawn -= 1     
-
-                self.give_power(board)
+                
             board.draw(self.window, self.width, self.height, timer)
             if use_power:
                 width_spacing = 2 + len(selected_piece.powers)

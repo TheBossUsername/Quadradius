@@ -182,8 +182,6 @@ class Game:
                         else:
                             text = (f"Turn error turn : {turn}")
             data = self.server.recieve_server_update()
-            if data != None:
-                print(f"recived data {data}")
             if data == None:
                 pass
             elif data == "NOT_LEGAL":
@@ -219,6 +217,13 @@ class Game:
                     text = ("It is Blue's Turn")
                 else:
                     text = (f"Turn error turn : {turn}")
+            elif "SPAWN" in data:
+                message_parts = data.split(":")
+                print(message_parts)
+                square_row = message_parts[1]
+                square_col = message_parts[2]
+                type = message_parts[3]
+                board.spawn_power(int(square_row), int(square_col), int(type))
 
 
             

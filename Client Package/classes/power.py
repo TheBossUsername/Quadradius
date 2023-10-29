@@ -5,8 +5,8 @@ from .constants import *
 total = 29
 class Power:
 
-    def __init__(self):
-        self.type = randint(1, total)
+    def __init__(self, type):
+        self.type = type
     
     def get_name(self):
 

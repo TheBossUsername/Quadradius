@@ -18,6 +18,7 @@ server_socket.listen(2)  # Allow up to 2 players to connect
 clients = []
 turn_counter = None
 current_turn = None
+spawn = 10
 
 def legal_move(selected_piece, selected_square, board):
         tq = selected_square
@@ -60,12 +61,16 @@ def legal_move(selected_piece, selected_square, board):
                 return False
         else:
             return False
+        
+    
+
 
 
 def handle_client(client_socket, board):
     global turn_counter
     global current_turn
     global clients
+    global spawn
     while True:
         data = client_socket.recv(1024).decode()
         if not data:
@@ -92,7 +97,17 @@ def handle_client(client_socket, board):
                     current_turn = clients[turn_counter % 2]
                     send_data = "YOUR_TURN"
                     current_turn.send(send_data.encode())
-                    time.sleep(1)    
+                    time.sleep(1)
+
+                    chance = random.randint(1, spawn)
+                    if chance == 1:
+                        row, col, type = board.spawn_power()
+                        send_data = f"SPAWN:{row}:{col}:{type}"
+                        for c in clients:
+                            c.send(send_data.encode())
+                        spawn = 10
+                    else:
+                        spawn -= 1     
                 else:
                     send_data = "NOT_LEGAL"
                     client_socket.send(send_data.encode())

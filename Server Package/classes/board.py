@@ -87,41 +87,6 @@ class Board:
         else:
             self.pieces[selected_piece.row][selected_piece.col], self.pieces[new_row][new_col] = None, self.pieces[selected_piece.row][selected_piece.col]
         selected_piece.move(new_row, new_col)
-
-
-    def get_selected_square(self):
-        for row in range(ROWS):
-            for col in range(COLS):
-                square = self.squares[row][col]
-                if square.selected:
-                    return square
-
-    def move_selected_square(self, square, direction):
-        old_square = square
-
-        if direction == 1:
-            new_row = old_square.row - 1
-            new_col = old_square.col
-        elif direction == 2:
-            new_row = old_square.row 
-            new_col = old_square.col + 1
-        elif direction == 3:
-            new_row = old_square.row + 1
-            new_col = old_square.col 
-        elif direction == 4:
-            new_row = old_square.row 
-            new_col = old_square.col - 1
-        else:
-            print("Error: Could not get new square cordinates")
-            return old_square
-
-        if new_row >= 0 and new_col >= 0 and new_row < ROWS and new_col < COLS:
-            new_square = self.squares[new_row][new_col]
-            old_square.selected = False
-            new_square.selected = True
-            return new_square         
-        else:
-            return old_square
         
     def spawn_power(self):
         potential = []
@@ -133,5 +98,6 @@ class Board:
                     potential.append(square)
         if len(potential) != 0:
             chosen = choice(potential)
-            self.squares[chosen.row][chosen.col].power = Power()
+            chosen.power = Power()
+            return chosen.row, chosen.col, chosen.power.type
                 
