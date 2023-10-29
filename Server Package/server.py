@@ -72,7 +72,6 @@ def handle_client(client_socket, board):
             break
         elif client_socket == current_turn:
             message_parts = data.split(":")
-            print(message_parts)
             if message_parts[0] == 'MOVE':
                 piece_row = message_parts[1]
                 piece_col = message_parts[2]

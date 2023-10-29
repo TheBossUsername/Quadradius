@@ -79,38 +79,38 @@ class Game:
                 if event.type == pygame.USEREVENT:
                     timer += 1
                     
-                if your_turn:
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_UP:
-                            if use_power:
-                                pass
-                            else:
-                                selected_square = board.move_selected_square(selected_square, 1)
+                
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        if use_power:
+                            pass
+                        else:
+                            selected_square = board.move_selected_square(selected_square, 1)
 
-                        if event.key == pygame.K_RIGHT:
-                            if use_power:
-                                if selected_power < len(selected_piece.powers) - 1:
-                                    selected_power += 1
-                                    board.de_target_squares()
-                                pass
-                            else:
-                                selected_square = board.move_selected_square(selected_square, 2)
+                    if event.key == pygame.K_RIGHT:
+                        if use_power:
+                            if selected_power < len(selected_piece.powers) - 1:
+                                selected_power += 1
+                                board.de_target_squares()
+                            pass
+                        else:
+                            selected_square = board.move_selected_square(selected_square, 2)
 
-                        if event.key == pygame.K_DOWN:
-                            if use_power:
-                                pass
-                            else:
-                                selected_square = board.move_selected_square(selected_square, 3)
+                    if event.key == pygame.K_DOWN:
+                        if use_power:
+                            pass
+                        else:
+                            selected_square = board.move_selected_square(selected_square, 3)
 
-                        if event.key == pygame.K_LEFT:
-                            if use_power:
-                                if selected_power > 0:
-                                    selected_power -= 1
-                                    board.de_target_squares()
-                                pass
-                            else:
-                                selected_square = board.move_selected_square(selected_square, 4)
-
+                    if event.key == pygame.K_LEFT:
+                        if use_power:
+                            if selected_power > 0:
+                                selected_power -= 1
+                                board.de_target_squares()
+                            pass
+                        else:
+                            selected_square = board.move_selected_square(selected_square, 4)
+                    if your_turn:
                         if event.key == pygame.K_SPACE:
                             if use_power:
                                 pass
@@ -162,8 +162,12 @@ class Game:
                                     else:
                                         selected_power = 0
                                         use_power = True
-                else:
-                    text = "Oppenent's Turn"
+                    else:
+                        if turn == 1:
+                            text = "Red's Turn"
+                        elif turn == 2:
+                            text = "Blue's Turn"
+                        
             data = self.server.recieve_server_update()
             if data != None:
                 print(f"recived data {data}")
@@ -190,7 +194,6 @@ class Game:
                 your_turn = False
             elif data == "YOUR_TURN":
                 your_turn = True
-                text = "It's your Turn"
 
 
             
