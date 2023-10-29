@@ -179,8 +179,8 @@ class Game:
                 square_row = message_parts[3]
                 square_col = message_parts[4]
                 selected_piece = board.pieces[int(piece_row)][int(piece_col)]
-                selected_square = board.squares[int(square_row)][int(square_col)]
-                board.move_piece(selected_piece, selected_square)
+                sq = board.squares[int(square_row)][int(square_col)]
+                board.move_piece(selected_piece, sq)
                 selected_piece = board.de_select_piece()
                 if turn == 1:
                     turn = 2
