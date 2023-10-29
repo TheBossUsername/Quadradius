@@ -6,10 +6,12 @@ from .board import Board
 from random import randint
 from time import sleep
 from .power import Power
+from server import Server
 
 class Game:
 
-    def __init__(self):
+    def __init__(self, server_ip, server_port):
+        self.server = 
         self.width = 800
         self.height = 800
         self.clock = pygame.time.Clock()
@@ -18,6 +20,8 @@ class Game:
         pygame.display.set_caption('Quadradius')
         pygame.init()
         pygame.time.set_timer(pygame.USEREVENT, 100)
+
+    def set_server(server_ip, server_port):
 
 
     def legal_move(self, selected_piece, selected_square, board):
@@ -279,52 +283,3 @@ class Game:
                 pygame.display.update()
                 sleep(3)
                 running = False
-
-
-
-    def run(self):
-        running = True
-        while running:
-            self.clock.tick(self.fps)
-
-            self.window.fill(BLACK)
-
-            font = pygame.font.Font(None, self.width // 10)
-            text = ("Welcome to Quadradius")
-            text_surface = font.render(text, True, WHITE)
-            text_rect = text_surface.get_rect()
-            text_rect.center = (self.width// 2, self.height // 3)
-            self.window.blit(text_surface, text_rect)
-
-            font = pygame.font.Font(None, self.width // 15)
-            text = ("Start: Space Bar")
-            text_surface = font.render(text, True, WHITE)
-            text_rect = text_surface.get_rect()
-            text_rect.center = ((self.width // 3), (self.height // 3) * 2)
-            self.window.blit(text_surface, text_rect)
-
-            font = pygame.font.Font(None, self.width // 15)
-            text = ("Quit: X")
-            text_surface = font.render(text, True, WHITE)
-            text_rect = text_surface.get_rect()
-            text_rect.center = ((self.width // 3) * 2, (self.height // 3) * 2)
-            self.window.blit(text_surface, text_rect)
-
-
-            pygame.display.update()
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                        running = False
-
-                if event.type == pygame.VIDEORESIZE:
-                    self.width  = event.w
-                    self.height  = event.h
-                    self.window = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        self.run_game()
-
-                    if event.key == pygame.K_x:
-                        running = False
-
-        pygame.quit
