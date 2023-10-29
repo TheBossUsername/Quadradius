@@ -6,7 +6,7 @@ from .board import Board
 from random import randint
 from time import sleep
 from .power import Power
-from server import Client
+from .server import Client
 
 class Game:
 
