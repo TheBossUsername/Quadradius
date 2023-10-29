@@ -1,7 +1,4 @@
 import socket
-import pygame
-from classes.board import Board
-from classes.game import Game
 
 class Client:
     def __init__(self, server_ip, server_port):
