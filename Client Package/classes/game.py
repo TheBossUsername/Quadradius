@@ -112,10 +112,12 @@ class Game:
                             selected_square = board.move_selected_square(selected_square, 4)
                     if your_turn:
                         if turn == 1:
-                            text = "Red's Turn"
+                            text = ("It is Red's Turn")
                         elif turn == 2:
-                            text = "Blue's Turn"
-                            
+                            text = ("It is Blues's Turn")
+                        else:
+                            text = (f"Turn error turn : {turn}")
+
                         if event.key == pygame.K_SPACE:
                             if use_power:
                                 pass
@@ -169,10 +171,11 @@ class Game:
                                         use_power = True
                     else:
                         if turn == 1:
-                            text = "Red's Turn"
+                            text = ("It is Red's Turn")
                         elif turn == 2:
-                            text = "Blue's Turn"
-                        
+                            text = ("It is Blues's Turn")
+                        else:
+                            text = (f"Turn error turn : {turn}")
             data = self.server.recieve_server_update()
             if data != None:
                 print(f"recived data {data}")
