@@ -13,9 +13,16 @@ client_socket.connect((server_ip, server_port))
 def send_player_input(data):
     client_socket.send(data.encode())
 
-game = Game()
 
 def main():
+    width = 800
+    height = 800
+    clock = pygame.time.Clock()
+    fps = 60
+    window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
+    pygame.display.set_caption('Quadradius')
+    pygame.init()
+    pygame.time.set_timer(pygame.USEREVENT, 100)
     running = True
     while running:
         for event in pygame.event.get():
@@ -25,6 +32,11 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     send_player_input('UP')
+                    
+            if event.type == pygame.VIDEORESIZE:
+                width  = event.w
+                height  = event.h
+                window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 
 if __name__ == "__main__":
     main()

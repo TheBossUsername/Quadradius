@@ -14,7 +14,6 @@ server_socket.listen(2)  # Allow up to 2 players to connect
 
 # List to store connected clients
 clients = []
-current_turn = None
 
 def handle_client(client_socket):
     global current_turn
@@ -22,11 +21,9 @@ def handle_client(client_socket):
         data = client_socket.recv(1024).decode()
         if not data:
             break
-
-        if client_socket == current_turn:
-            # Process player input
-            if data == 'UP':
-                print("Player pushed up")
+        # Process player input
+        if data == 'UP':
+            print("Player pushed up")
             
 
 def main():
@@ -38,7 +35,6 @@ def main():
         clients.append(client)
         print(f"Connected to {addr[0]}:{addr[1]}")
 
-    current_turn = random.choice(clients)
     print("Ready to go")
 
     for client in clients:
