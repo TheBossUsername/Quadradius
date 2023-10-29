@@ -3,6 +3,7 @@ import threading
 from classes.game import Game
 import random
 from classes.board import Board
+import time
 
 # Server configuration
 server_ip = '10.50.169.241'  # Use your server's IP address
@@ -81,16 +82,22 @@ def handle_client(client_socket, board):
                 selected_square = board.squares[int(square_row)][int(square_col)]
                 if legal_move(selected_piece, selected_square, board):
                     board.move_piece(selected_piece, selected_square)
-                    send_data = "MOVE"
-                    client_socket.send(send_data.encode())
+                    send_data = f"MOVE:{selected_piece.row}:{selected_piece.col}:{selected_square.row}:{selected_square.col}"
+                    for c in clients:
+                        c.send(send_data.encode())
+                    time.sleep(1)
                     send_data = "END_TURN"
                     current_turn.send(send_data.encode())
+                    time.sleep(1)
                     turn_counter += 1
+                    print(f"New Turn counter {turn_counter}")
                     current_turn = clients[turn_counter % 2]
                     send_data = "YOUR_TURN"
-                    current_turn.send(send_data.encode())    
+                    current_turn.send(send_data.encode())
+                    time.sleep(1)    
                 else:
                     send_data = "NOT_LEGAL"
+                    client_socket.send(send_data.encode())
         
         
         client_socket.send(send_data.encode())

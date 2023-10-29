@@ -172,8 +172,16 @@ class Game:
                 pass
             elif data == "NOT_LEGAL":
                 text = ("That is not a legal move, Back: X")
-            elif data == "MOVE":
-                board.move_piece()
+            elif "MOVE" in data:
+                message_parts = data.split(":")
+                print(message_parts)
+                piece_row = message_parts[1]
+                piece_col = message_parts[2]
+                square_row = message_parts[3]
+                square_col = message_parts[4]
+                selected_piece = board.pieces[int(piece_row)][int(piece_col)]
+                selected_square = board.squares[int(square_row)][int(square_col)]
+                board.move_piece(selected_piece, selected_square)
                 selected_piece = board.de_select_piece()
             elif data == "END_TURN":
                 your_turn = False
