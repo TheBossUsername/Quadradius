@@ -194,6 +194,7 @@ class Game:
                 your_turn = False
             elif data == "YOUR_TURN":
                 your_turn = True
+                text = "It's your Turn"
 
 
             
