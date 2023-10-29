@@ -123,5 +123,5 @@ class Board:
             return old_square
         
     def spawn_power(self, row, col, type):
-        self.squares[row][col].power = Power()
+        self.squares[row][col].power = Power(type)
                 
