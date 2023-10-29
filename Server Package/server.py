@@ -109,8 +109,11 @@ def main():
         print(f"Connected to {addr[0]}:{addr[1]}")
     board = Board()
 
+    print(f"Starting Now")
     turn_counter = random.randint(1,2)
+    print(f"Turn Counter: {turn_counter}")
     current_turn = clients[turn_counter % 2]
+    print(f"Current Turn: {current_turn}")
 
     for client in clients:
         client_handler = threading.Thread(target=handle_client, args=(client, board))
