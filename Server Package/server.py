@@ -39,6 +39,7 @@ def main():
         print(f"Connected to {addr[0]}:{addr[1]}")
 
     current_turn = random.choice(clients)
+    print("Ready to go")
 
     for client in clients:
         client_handler = threading.Thread(target=handle_client, args=(client,))
