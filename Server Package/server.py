@@ -90,7 +90,6 @@ def handle_client(client_socket, board):
                     current_turn.send(send_data.encode())
                     time.sleep(1)
                     turn_counter += 1
-                    print(f"New Turn counter {turn_counter}")
                     current_turn = clients[turn_counter % 2]
                     send_data = "YOUR_TURN"
                     current_turn.send(send_data.encode())
@@ -100,7 +99,6 @@ def handle_client(client_socket, board):
                     client_socket.send(send_data.encode())
         
         
-        client_socket.send(send_data.encode())
             
 
 def main():
