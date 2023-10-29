@@ -56,11 +56,10 @@ class Game:
         board = Board()
 
         your_turn = False
-        spawn = 10
         use_power = False
         selected_piece = None
         selected_square = board.get_selected_square()
-        turn = randint(1,2)
+        turn = 1
         timer = 0
         selected_power = None
         
@@ -183,11 +182,16 @@ class Game:
                 selected_square = board.squares[int(square_row)][int(square_col)]
                 board.move_piece(selected_piece, selected_square)
                 selected_piece = board.de_select_piece()
+                if turn == 1:
+                    turn = 2
+                elif turn == 2:
+                    turn = 1
             elif data == "END_TURN":
                 your_turn = False
             elif data == "YOUR_TURN":
                 your_turn = True
                 text = "It's your Turn"
+
 
             
 

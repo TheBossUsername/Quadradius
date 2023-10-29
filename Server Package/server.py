@@ -119,9 +119,8 @@ def main():
     print(f"Turn Counter: {turn_counter}")
     current_turn = clients[turn_counter % 2]
     send_data = "YOUR_TURN"
-    print(f"Sending {send_data} to {current_turn}")
     current_turn.send(send_data.encode()) 
-    print(f"Sent {send_data} to {current_turn}")
+    
 
     for client in clients:
         client_handler = threading.Thread(target=handle_client, args=(client, board))
