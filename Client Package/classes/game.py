@@ -189,17 +189,6 @@ class Game:
             else:
                 board.de_target_squares()
             
-
-            
-            if end_turn:
-                chance = randint(1, spawn)
-                if chance == 1:
-                    board.spawn_power()
-                    spawn = 10
-                else:
-                    spawn -= 1     
-
-                self.give_power(board)
             board.draw(self.window, self.width, self.height, timer)
             if use_power:
                 width_spacing = 2 + len(selected_piece.powers)
