@@ -62,6 +62,13 @@ class Game:
         turn = 1
         timer = 0
         selected_power = None
+
+        if turn == 1:
+            text = ("It is Red's Turn")
+        elif turn == 2:
+            text = ("It is Blues's Turn")
+        else:
+            text = (f"Turn error turn : {turn}")
         
 
         running = True
