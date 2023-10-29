@@ -64,7 +64,8 @@ class Square:
                     # Draw power up circle    
                     if self.power != None and self.height == tier + 1:
                         t = timer % 30
-                        path = os.path.join(f"classes", "Orb", "orb{t}.png")
+                        image = (f"orb{t}.png")
+                        path = os.path.join(f"classes", "Orb", image)
                         orb = pygame.transform.scale(pygame.image.load(path), (size, size * .60))
                         x = x - (tier * s_height)  
                         y = y - (tier * s_height) + (size * .22) 
