@@ -157,7 +157,12 @@ class Game:
                             selected_piece = board.de_select_piece()
                             use_power = False
                             selected_power = None
-                            text = "It's your Turn"
+                            if turn == 1:
+                                text = ("It is Red's Turn")
+                            elif turn == 2:
+                                text = ("It is Blues's Turn")
+                            else:
+                                text = (f"Turn error turn : {turn}")
                         
                         if event.key == pygame.K_z:
                             if selected_piece == None:
@@ -209,7 +214,6 @@ class Game:
                 your_turn = False
             elif data == "YOUR_TURN":
                 your_turn = True
-                text = "It's your Turn"
 
 
             
