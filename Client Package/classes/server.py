@@ -5,8 +5,8 @@ class Client:
         self.server_ip = server_ip  
         self.server_port = server_port 
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_socket.setblocking(False)
         self.client_socket.connect((server_ip, server_port))
+        self.client_socket.setblocking(False)
         
 
     def send_player_input(self, data):
