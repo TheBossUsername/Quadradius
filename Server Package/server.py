@@ -4,7 +4,7 @@ from classes.game import Game
 import random
 
 # Server configuration
-server_ip = '0.0.0.0'  # Use your server's IP address
+server_ip = '10.50.169.241'  # Use your server's IP address
 server_port = 12345  # Choose a port for communication
 
 # Create a socket to listen for incoming connections

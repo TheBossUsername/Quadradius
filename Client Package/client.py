@@ -3,7 +3,7 @@ import pygame
 from classes.board import Board
 
 # Server configuration
-server_ip = '0.0.0.0'  # Use the IP address of the server
+server_ip = '10.50.169.241'  # Use the IP address of the server
 server_port = 12345  # Use the same port as the server
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
