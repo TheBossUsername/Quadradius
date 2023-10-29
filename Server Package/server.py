@@ -65,6 +65,8 @@ def handle_client(client_socket, board):
     global turn_counter
     global current_turn
     global clients
+    send_data = "YOUR_TURN"
+    current_turn.send(send_data.encode()) 
     while True:
         data = client_socket.recv(1024).decode()
         if not data:
