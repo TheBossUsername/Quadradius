@@ -18,7 +18,7 @@ server_socket.listen(2)  # Allow up to 2 players to connect
 clients = []
 turn_counter = None
 current_turn = None
-spawn = 10
+spawn = 7
 
 def legal_move(selected_piece, selected_square, board):
         tq = selected_square
@@ -131,7 +131,7 @@ def handle_client(client_socket, board):
                         send_data = f"SPAWN:{row}:{col}:{type}"
                         for c in clients:
                             c.send(send_data.encode())
-                        spawn = 10
+                        spawn = 7
                     else:
                         spawn -= 1    
                     time.sleep(1)
