@@ -233,6 +233,10 @@ class Game:
                 del sp.powers[int(type)] 
                 selected_power = None
                 selected_piece = board.de_select_piece()
+                if turn == 1:
+                    turn = 2
+                elif turn == 2:
+                    turn = 1
 
 
             
