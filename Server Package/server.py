@@ -78,6 +78,24 @@ def give_power(board):
                     c.send(send_data.encode())
                 time.sleep(1)
 
+def check_win(board):
+        pieces_1 = 0
+        pieces_2 = 0
+        for row in range(8):
+            for col in range(8):
+                piece = board.pieces[row][col]
+                if piece != None:
+                    if piece.player == 1:
+                        pieces_1 += 1
+                    elif piece.player == 2:
+                        pieces_2 += 1
+        if pieces_1 == 0:
+            return 2
+        elif pieces_2 == 0:
+            return 1
+        else:
+            return 0
+
 
 
 def handle_client(client_socket, board):
@@ -122,7 +140,18 @@ def handle_client(client_socket, board):
                     current_turn = clients[turn_counter % 2]
                     send_data = "YOUR_TURN"
                     current_turn.send(send_data.encode()) 
-                    time.sleep(1)     
+                    time.sleep(1)    
+                    win = check_win(board)
+                    if win == 0:
+                        pass
+                    elif win == 1:
+                        send_data = f"RED_WINS"
+                        for c in clients:
+                            c.send(send_data.encode())
+                    elif win == 2:
+                        send_data = f"BLUE_WINS"
+                        for c in clients:
+                            c.send(send_data.encode()) 
                     
                 else:
                     send_data = "NOT_LEGAL"
@@ -158,6 +187,19 @@ def handle_client(client_socket, board):
                 send_data = "YOUR_TURN"
                 current_turn.send(send_data.encode()) 
                 time.sleep(1)
+                win = check_win(board)
+                if win == 0:
+                    pass
+                elif win == 1:
+                    send_data = f"RED_WINS"
+                    for c in clients:
+                        c.send(send_data.encode())
+                elif win == 2:
+                    send_data = f"BLUE_WINS"
+                    for c in clients:
+                        c.send(send_data.encode())
+                
+
                 
 
                     
@@ -178,9 +220,7 @@ def main():
         print(f"Connected to {addr[0]}:{addr[1]}")
     board = Board()
 
-    print(f"Starting Now")
     turn_counter = random.randint(1,2)
-    print(f"Turn Counter: {turn_counter}")
     current_turn = clients[turn_counter % 2]
     send_data = "YOUR_TURN"
     current_turn.send(send_data.encode()) 

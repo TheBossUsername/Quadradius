@@ -1,5 +1,6 @@
 from .constants import *
 import pygame
+import os
 PADDING = 5
 RADIUS = SQSZ//2 - PADDING
 
@@ -62,7 +63,8 @@ class Piece:
             pygame.draw.circle(window, body_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .8)
 
         if 4 in self.traits:
-            image = pygame.transform.scale(pygame.image.load(f'quadradius\Orb\oarw.png'), (size * .2, size * .2))
+            path = os.path.join("classes", "Orb", "oarw.png")
+            image = pygame.transform.scale(pygame.image.load(path), (size * .2, size * .2))
             arrow = pygame.transform.rotate(image, 45)
             z = x - (tier * s_height) - (size * .33)
             t = y - (tier * s_height) - (size * .31) 
@@ -78,14 +80,16 @@ class Piece:
             window.blit(arrow, (z, t))
 
         if 1 in self.traits:
-            image = pygame.transform.scale(pygame.image.load(f'quadradius\Orb\oant.png'), (size * .3, size * .3))
+            path = os.path.join("classes", "Orb", "oant.png")
+            image = pygame.transform.scale(pygame.image.load(path), (size * .3, size * .3))
             antenna = pygame.transform.rotate(image, 55)
             z = x - (tier * s_height) - (size * .6)
             t = y - (tier * s_height) - (size // 1.8) 
             window.blit(antenna, (z, t))
 
         if 3 in self.traits:
-            fan = pygame.transform.scale(pygame.image.load(f'quadradius\Orb\ofan.png'), (size * .3, size * .3))
+            path = os.path.join("classes", "Orb", "ofan.png")
+            fan = pygame.transform.scale(pygame.image.load(path), (size * .3, size * .3))
             z = x - (tier * s_height) - (size * .5)
             t = y - (tier * s_height) - (size * .15)
             window.blit(fan, (z, t))

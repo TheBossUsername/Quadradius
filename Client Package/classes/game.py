@@ -57,6 +57,7 @@ class Game:
         turn = 1
         timer = 0
         selected_power = None
+        won = 0
 
         if turn == 1:
             text = ("It is Red's Turn")
@@ -237,6 +238,10 @@ class Game:
                     turn = 2
                 elif turn == 2:
                     turn = 1
+            elif data == "RED_WINS":
+                won = 1
+            elif data == "BLUE_WINS":
+                won = 2
 
 
             
@@ -277,7 +282,6 @@ class Game:
                 text_rect.center = (text_center)
                 self.window.blit(text_surface, text_rect)
             pygame.display.update()
-            won = self.check_win(board)
             if won == 1 or won == 2:
                 sleep(2)
                 self.window.fill(BLACK)
