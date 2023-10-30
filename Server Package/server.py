@@ -122,11 +122,43 @@ def handle_client(client_socket, board):
                     current_turn = clients[turn_counter % 2]
                     send_data = "YOUR_TURN"
                     current_turn.send(send_data.encode()) 
-                    time.sleep(1)
+                    time.sleep(1)     
                     
                 else:
                     send_data = "NOT_LEGAL"
                     client_socket.send(send_data.encode())
+
+            elif message_parts[0] == 'USE':
+                piece_row = message_parts[1]
+                piece_col = message_parts[2]
+                type = message_parts[3]
+                selected_piece = board.pieces[int(piece_row)][int(piece_col)]
+                selected_piece.use_power(board, type)
+                del selected_piece.powers[type] 
+                send_data = f"USE:{selected_piece.row}:{selected_piece.col}:{type}"
+                for c in clients:
+                        c.send(send_data.encode())
+                time.sleep(1)
+                send_data = "END_TURN"
+                current_turn.send(send_data.encode())
+                time.sleep(1)
+                chance = random.randint(1, spawn)
+                if chance == 1:
+                    row, col, type = board.spawn_power()
+                    send_data = f"SPAWN:{row}:{col}:{type}"
+                    for c in clients:
+                        c.send(send_data.encode())
+                    spawn = 10
+                else:
+                    spawn -= 1    
+                time.sleep(1)
+                give_power(board)
+                turn_counter += 1
+                current_turn = clients[turn_counter % 2]
+                send_data = "YOUR_TURN"
+                current_turn.send(send_data.encode()) 
+                time.sleep(1)
+                
 
                     
         

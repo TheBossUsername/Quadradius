@@ -160,12 +160,9 @@ class Game:
                                     text = ("This piece has no power")
                                 else:
                                     if use_power:
-                                        selected_piece.use_power(board, selected_power)
-                                        use_power = False
-                                        del selected_piece.powers[selected_power] 
-                                        selected_power = None
-                                        selected_piece = board.de_select_piece()
-                                        end_turn = True
+                                        type = selected_piece.get_selected_power_type(selected_power)
+                                        data = f"USE:{selected_piece.row}:{selected_piece.col}:{type}"
+                                        self.server.send_player_input(data)
                                     else:
                                         selected_power = 0
                                         use_power = True
@@ -226,6 +223,17 @@ class Game:
                 sp = board.pieces[int(piece_row)][int(piece_col)]
                 sq = board.squares[int(square_row)][int(square_col)]
                 self.give_power(sp, sq)
+            elif "USE" in data:
+                message_parts = data.split(":")
+                piece_row = message_parts[1]
+                piece_col = message_parts[2]
+                type = message_parts[3]
+                sp = board.pieces[int(piece_row)][int(piece_col)]
+                sp.use_power(board, type)
+                use_power = False
+                del sp.powers[type] 
+                selected_power = None
+                selected_piece = board.de_select_piece()
 
 
             

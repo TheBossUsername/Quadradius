@@ -21,6 +21,9 @@ class Piece:
 
     def use_power(self, board, index):
         self.powers[index].use(self, board)
+    
+    def get_selected_power_type(self, index):
+        return self.powers[index].type
         
     def draw(self, width, height, window, tier):
         s_amount = 8
