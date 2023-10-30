@@ -133,8 +133,8 @@ def handle_client(client_socket, board):
                 piece_col = message_parts[2]
                 type = message_parts[3]
                 selected_piece = board.pieces[int(piece_row)][int(piece_col)]
-                selected_piece.use_power(board, type)
-                del selected_piece.powers[type] 
+                selected_piece.use_power(board, int(type))
+                del selected_piece.powers[int(type)] 
                 send_data = f"USE:{selected_piece.row}:{selected_piece.col}:{type}"
                 for c in clients:
                         c.send(send_data.encode())

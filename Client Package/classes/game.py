@@ -229,9 +229,9 @@ class Game:
                 piece_col = message_parts[2]
                 type = message_parts[3]
                 sp = board.pieces[int(piece_row)][int(piece_col)]
-                sp.use_power(board, type)
+                sp.use_power(board, int(type))
                 use_power = False
-                del sp.powers[type] 
+                del sp.powers[int(type)] 
                 selected_power = None
                 selected_piece = board.de_select_piece()
 
