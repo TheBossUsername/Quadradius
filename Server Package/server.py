@@ -71,13 +71,12 @@ def give_power(board):
             if square.power != None and piece != None:
                 if len(piece.powers) >= 3:
                     del piece.powers[0]
-                else:
-                    piece.powers.append(square.power)
-                    square.power = None
-                    send_data = f"GIVE:{piece.row}:{piece.col}:{piece.power.type}:{square.row}:{square.col}"
-                    for c in clients:
-                        c.send(send_data.encode())
-                    time.sleep(1)
+                piece.powers.append(square.power)
+                square.power = None
+                send_data = f"GIVE:{piece.row}:{piece.col}:{square.row}:{square.col}"
+                for c in clients:
+                    c.send(send_data.encode())
+                time.sleep(1)
 
 
 

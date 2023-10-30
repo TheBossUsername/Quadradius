@@ -221,13 +221,11 @@ class Game:
                 message_parts = data.split(":")
                 piece_row = message_parts[1]
                 piece_col = message_parts[2]
-                type = message_parts[3]
-                square_row = message_parts[4]
-                square_col = message_parts[5]
+                square_row = message_parts[3]
+                square_col = message_parts[4]
                 sp = board.pieces[int(piece_row)][int(piece_col)]
                 sq = board.squares[int(square_row)][int(square_col)]
-                type = int(type)
-                self.give_power(sp, sq, type)
+                self.give_power(sp, sq)
 
 
             
