@@ -1,285 +1,215 @@
-import pygame
-from .constants import *
-from .piece import Piece
-from .square import Square
+import threading
+import random
 from .board import Board
-from random import randint
-from time import sleep
-from .power import Power
+import time
+from .server import Server
 
 class Game:
+    def __init__(self, server_ip, server_port):
 
-    def __init__(self):
-        self.width = 800
-        self.height = 800
-        self.clock = pygame.time.Clock()
-        self.fps = 60
-        self.window = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
-        pygame.display.set_caption('Quadradius')
-        pygame.init()
-        pygame.time.set_timer(pygame.USEREVENT, 100)
+        self.server = Server(server_ip, server_port)
+        self.board = Board()
+        self.clients = []
+        self.turn_counter = None
+        self.current_turn = None
+        self.spawn = 7
 
+    def legal_move(self, selected_piece, selected_square):
+            tq = selected_square
+            sp = selected_piece
+            sq = self.board.squares[sp.row][sp.col]
+            tp = self.board.pieces[tq.row][tq.col]
 
+            if tq.row >= 0 and tq.col >= 0 and tq.row < 8 and tq.col < 8:
+                if 3 not in sp.traits:
+                    if (tq.height - sq.height) >= 2:
+                        return False
+                
+                if tp != None:
+                    if tp.player == sp.player:
+                        return False
+                    if 2 in tp.traits:
+                        return False
+                
+                    
+                if (tq.row, tq.col) == (sp.row + 1, sp.col):
+                    return True
+                elif (tq.row, tq.col) == (sp.row - 1, sp.col):
+                    return True
+                elif (tq.row, tq.col) == (sp.row, sp.col + 1):
+                    return True
+                elif (tq.row, tq.col) == (sp.row, sp.col - 1):
+                    return True
+                elif 4 in sp.traits:
+                    if (tq.row, tq.col) == (sp.row + 1, sp.col + 1):
+                        return True
+                    elif (tq.row, tq.col) == (sp.row - 1, sp.col + 1):
+                        return True
+                    elif (tq.row, tq.col) == (sp.row - 1, sp.col - 1):
+                        return True
+                    elif (tq.row, tq.col) == (sp.row + 1, sp.col - 1):
+                        return True
+                    else:
+                        return False
+                else:
+                    return False
+            else:
+                return False
+            
 
-    def check_win(self, board):
-        pieces_1 = 0
-        pieces_2 = 0
-        for row in range(ROWS):
-            for col in range(COLS):
-                piece = board.pieces[row][col]
-                if piece != None:
-                    if piece.player == 1:
-                        pieces_1 += 1
-                    elif piece.player == 2:
-                        pieces_2 += 1
-        if pieces_1 == 0:
-            return 2
-        elif pieces_2 == 0:
-            return 1
-        else:
-            return 0
-        
-    def give_power(self, board):
-        for row in range(ROWS):
-            for col in range(COLS):
-                square = board.squares[row][col]
-                piece = board.pieces[row][col]
+    def give_power(self):
+        for row in range(8):
+            for col in range(8):
+                square = self.board.squares[row][col]
+                piece = self.board.pieces[row][col]
                 if square.power != None and piece != None:
                     if len(piece.powers) >= 3:
                         del piece.powers[0]
                     piece.powers.append(square.power)
                     square.power = None
-                
+                    send_data = f"GIVE:{piece.row}:{piece.col}:{square.row}:{square.col}"
+                    for c in self.clients:
+                        self.server.send_server_data(c, send_data)
+                    time.sleep(1)
 
-
-    def run_game(self):
-        board = Board()
-
-        turn_end = True
-        spawn = 10
-        use_power = False
-        selected_piece = None
-        selected_square = board.get_selected_square()
-        turn = randint(1,2)
-        timer = 0
-        selected_power = None
-        
-
-        running = True
-        while running:
-            self.clock.tick(self.fps)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-
-                if event.type == pygame.VIDEORESIZE:
-                    self.width  = event.w
-                    self.height  = event.h
-                    self.window = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
-
-                if event.type == pygame.USEREVENT:
-                    timer += 1
-                    
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        if use_power:
-                            pass
-                        else:
-                            selected_square = board.move_selected_square(selected_square, 1)
-
-                    if event.key == pygame.K_RIGHT:
-                        if use_power:
-                            if selected_power < len(selected_piece.powers) - 1:
-                                selected_power += 1
-                                board.de_target_squares()
-                            pass
-                        else:
-                            selected_square = board.move_selected_square(selected_square, 2)
-
-                    if event.key == pygame.K_DOWN:
-                        if use_power:
-                            pass
-                        else:
-                            selected_square = board.move_selected_square(selected_square, 3)
-
-                    if event.key == pygame.K_LEFT:
-                        if use_power:
-                            if selected_power > 0:
-                                selected_power -= 1
-                                board.de_target_squares()
-                            pass
-                        else:
-                            selected_square = board.move_selected_square(selected_square, 4)
-
-                    if event.key == pygame.K_SPACE:
-                        if use_power:
-                            pass
-                        else:
-                            if selected_piece == None:
-                                selected_piece = board.select_piece()
-                                if selected_piece == None:
-                                    text = ("No piece was selected")
-                                    selected_piece = board.de_select_piece()
-                                elif selected_piece.player == turn:
-                                    if len(selected_piece.powers) != 0:
-                                        text = (f"Move: Space bar, Powers: Z, Back: X")
-                                    else:
-                                        text = ("Move: Space bar, Back: X")
-                                elif selected_piece.player != turn:
-                                    text = ("This piece is not yours!")
-                                    selected_piece = board.de_select_piece()
-                                else:
-                                    text = ("Error: Unknown thing selected")
-                                    selected_piece = board.de_select_piece()
-                            elif selected_piece != None:
-                                if self.legal_move(selected_piece, selected_square, board):
-                                    board.move_piece()
-                                    selected_piece = board.de_select_piece()
-                                    turn_end = True
-                                else:
-                                    text = ("That is not a legal move, Back: X")
-                            else:
-                                text = ("ERROR with piece")
-
-                    if event.key == pygame.K_x:
-                        selected_piece = board.de_select_piece()
-                        use_power = False
-                        selected_power = None
-                        if turn == 1:
-                            text = ("It is Red's turn")
-                        elif turn == 2:
-                            text = ("It is Blue's turn")
-                        else:
-                            text = (f"Error with turn counter value: {turn}")
-                    
-                    if event.key == pygame.K_z:
-                        if selected_piece == None:
-                            text = ("No piece was selected")
-                        elif selected_piece != None:
-                            if len(selected_piece.powers) == 0:
-                                text = ("This piece has no power")
-                            else:
-                                if use_power:
-                                    selected_piece.use_power(board, selected_power)
-                                    use_power = False
-                                    del selected_piece.powers[selected_power] 
-                                    selected_power = None
-                                    selected_piece = board.de_select_piece()
-                                    turn_end = True
-                                else:
-                                    selected_power = 0
-                                    use_power = True
-
-            if use_power:
-                selected_piece.show_targets(selected_power, board)
+    def check_win(self):
+            pieces_1 = 0
+            pieces_2 = 0
+            for row in range(8):
+                for col in range(8):
+                    piece = self.board.pieces[row][col]
+                    if piece != None:
+                        if piece.player == 1:
+                            pieces_1 += 1
+                        elif piece.player == 2:
+                            pieces_2 += 1
+            if pieces_1 == 0:
+                return 2
+            elif pieces_2 == 0:
+                return 1
             else:
-                board.de_target_squares()
-            
+                return 0
 
-            
-            if turn_end:
-                if turn == 1:
-                    turn = 2
-                    text = ("It is Blue's turn")
-                elif turn == 2:
-                    turn = 1
-                    text = ("It is Red's turn")
-                else:
-                    text = (f"Error with turn counter value: {turn}")     
-                turn_end = False 
-                
-            board.draw(self.window, self.width, self.height, timer)
-            if use_power:
-                width_spacing = 2 + len(selected_piece.powers)
-                for x in range(0, len(selected_piece.powers)):
-                    text = (f"{selected_piece.get_power_name(x)}")
-                    font = pygame.font.Font(None, self.width // (20  + (5 * (len(selected_piece.powers) - 1))))
-                    text_center = (self.width * (x + 1) // width_spacing, self.height - (self.height // 22))
-                    if x == selected_power:
-                        text_surface = font.render(text, True, RED)
+
+
+    def run_game(self, client_socket):
+        while True:
+            data = self.server.recieve_player_input(client_socket)
+            if not data:
+                pass
+            elif client_socket == self.current_turn:
+                message_parts = data.split(":")
+                if message_parts[0] == 'MOVE':
+                    piece_row = message_parts[1]
+                    piece_col = message_parts[2]
+                    square_row = message_parts[3]
+                    square_col = message_parts[4]
+                    selected_piece = self.board.pieces[int(piece_row)][int(piece_col)]
+                    selected_square = self.board.squares[int(square_row)][int(square_col)]
+                    if self.legal_move(selected_piece, selected_square):
+                        send_data = f"MOVE:{selected_piece.row}:{selected_piece.col}:{selected_square.row}:{selected_square.col}"
+                        self.board.move_piece(selected_piece, selected_square)
+                        for c in self.clients:
+                            self.server.send_server_data(c, send_data)
+                        time.sleep(1)
+                        send_data = "END_TURN"
+                        self.current_turn.send(send_data.encode())
+                        time.sleep(1)
+                        chance = random.randint(1, self.spawn)
+                        if chance == 1:
+                            row, col, type = self.board.spawn_power()
+                            send_data = f"SPAWN:{row}:{col}:{type}"
+                            for c in self.clients:
+                                self.server.send_server_data(c, send_data)
+                            self.spawn = 7
+                        else:
+                            self.spawn -= 1    
+                        time.sleep(1)
+                        self.give_power()
+                        self.turn_counter += 1
+                        self.current_turn = self.clients[self.turn_counter % 2]
+                        send_data = "YOUR_TURN"
+                        self.server.send_server_data(self.current_turn, send_data)
+                        time.sleep(1)    
+                        win = self.check_win()
+                        if win == 0:
+                            pass
+                        elif win == 1:
+                            send_data = f"RED_WINS"
+                            for c in self.clients:
+                                self.server.send_server_data(c, send_data)
+                        elif win == 2:
+                            send_data = f"BLUE_WINS"
+                            for c in self.clients:
+                                self.server.send_server_data(c, send_data) 
+                        
                     else:
-                        text_surface = font.render(text, True, WHITE)
-                    text_rect = text_surface.get_rect()
-                    text_rect.center = (text_center)
-                    self.window.blit(text_surface, text_rect)
+                        send_data = "NOT_LEGAL"
+                        client_socket.send(send_data.encode())
+
+                elif message_parts[0] == 'USE':
+                    piece_row = message_parts[1]
+                    piece_col = message_parts[2]
+                    type = message_parts[3]
+                    selected_piece = self.board.pieces[int(piece_row)][int(piece_col)]
+                    send_data = f"USE:{selected_piece.row}:{selected_piece.col}:{type}"
+                    selected_piece.use_power(self.board, int(type))
+                    del selected_piece.powers[int(type)] 
+                    for c in self.clients:
+                            self.server.send_server_data(c, send_data)
+                    time.sleep(1)
+                    send_data = "END_TURN"
+                    self.current_turn.send(send_data.encode())
+                    time.sleep(1)
+                    chance = random.randint(1, self.spawn)
+                    if chance == 1:
+                        row, col, type = self.board.spawn_power()
+                        send_data = f"SPAWN:{row}:{col}:{type}"
+                        for c in self.clients:
+                            self.server.send_server_data(c, send_data)
+                        self.spawn = 10
+                    else:
+                        self.spawn -= 1    
+                    time.sleep(1)
+                    self.give_power()
+                    self.turn_counter += 1
+                    self.current_turn = self.clients[self.turn_counter % 2]
+                    send_data = "YOUR_TURN"
+                    self.server.send_server_data(self.current_turn, send_data)
+                    time.sleep(1)
+                    win = self.check_win()
+                    if win == 0:
+                        pass
+                    elif win == 1:
+                        send_data = f"RED_WINS"
+                        for c in self.clients:
+                            self.server.send_server_data(c, send_data)
+                    elif win == 2:
+                        send_data = f"BLUE_WINS"
+                        for c in self.clients:
+                            self.server.send_server_data(c, send_data)
+                    
+
+                    
+
+                        
+            
+            
                 
-                text = (f"Confirm: Z Back: X")
-                font = pygame.font.Font(None, self.width // (20  + (5 * (len(selected_piece.powers) - 1))))
-                text_center = (self.width * (width_spacing - 1) // width_spacing, self.height - (self.height // 22))
-                text_surface = font.render(text, True, WHITE)
-                text_rect = text_surface.get_rect()
-                text_rect.center = (text_center)
-                self.window.blit(text_surface, text_rect)
-            else:
-                font = pygame.font.Font(None, self.width // 20)
-                text_center = (self.width // 2, self.height - (self.height // 22))
-                text_surface = font.render(text, True, WHITE)
-                text_rect = text_surface.get_rect()
-                text_rect.center = (text_center)
-                self.window.blit(text_surface, text_rect)
-            pygame.display.update()
-            won = self.check_win(board)
-            if won == 1 or won == 2:
-                sleep(2)
-                self.window.fill(BLACK)
-                font = pygame.font.Font(None, 90)
-                if won == 1:
-                    text = (f"Red wins!")
-                if won == 2:
-                    text = (f"Blue wins!")
-                text_surface = font.render(text, True, WHITE)
-                text_rect = text_surface.get_rect()
-                text_rect.center = (self.width// 2, self.height // 2)
-                self.window.blit(text_surface, text_rect)
-                pygame.display.update()
-                sleep(3)
-                running = False
-
-
 
     def run(self):
-        running = True
-        while running:
-            self.clock.tick(self.fps)
+        print(f"Server listening on {self.server.server_ip}:{self.server.server_port}")
+        while len(self.clients) < 2:
+            print("waiting")
+            client, addr = self.server.server_socket.accept()
+            self.clients.append(client)
+            print(f"Connected to {addr[0]}:{addr[1]}")
 
-            self.window.fill(BLACK)
-
-            font = pygame.font.Font(None, self.width // 10)
-            text = ("Welcome to Quadradius")
-            text_surface = font.render(text, True, WHITE)
-            text_rect = text_surface.get_rect()
-            text_rect.center = (self.width// 2, self.height // 3)
-            self.window.blit(text_surface, text_rect)
-
-            font = pygame.font.Font(None, self.width // 15)
-            text = ("Start: Space Bar")
-            text_surface = font.render(text, True, WHITE)
-            text_rect = text_surface.get_rect()
-            text_rect.center = ((self.width // 3), (self.height // 3) * 2)
-            self.window.blit(text_surface, text_rect)
-
-            font = pygame.font.Font(None, self.width // 15)
-            text = ("Quit: X")
-            text_surface = font.render(text, True, WHITE)
-            text_rect = text_surface.get_rect()
-            text_rect.center = ((self.width // 3) * 2, (self.height // 3) * 2)
-            self.window.blit(text_surface, text_rect)
-
-
-            pygame.display.update()
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                        running = False
-
-                if event.type == pygame.VIDEORESIZE:
-                    self.width  = event.w
-                    self.height  = event.h
-                    self.window = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        self.run_game()
-
-                    if event.key == pygame.K_x:
-                        running = False
-
-        pygame.quit
+        self.turn_counter = random.randint(1,2)
+        self.current_turn = self.clients[self.turn_counter % 2]
+        send_data = "YOUR_TURN"
+        self.server.send_server_data(self.current_turn, send_data)
+        
+        for client in self.clients:
+            client_handler = threading.Thread(target=self.run_game, args=(client,))
+            client_handler.start()

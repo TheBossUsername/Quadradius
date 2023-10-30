@@ -2,7 +2,7 @@ from random import randint, choice
 from .constants import *
 
 
-total = 29
+total = 28
 class Power:
 
     def __init__(self):
