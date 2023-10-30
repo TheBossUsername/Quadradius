@@ -160,8 +160,7 @@ class Game:
                                     text = ("This piece has no power")
                                 else:
                                     if use_power:
-                                        type = selected_piece.get_selected_power_type(selected_power)
-                                        data = f"USE:{selected_piece.row}:{selected_piece.col}:{type}"
+                                        data = f"USE:{selected_piece.row}:{selected_piece.col}:{selected_power}"
                                         self.server.send_player_input(data)
                                     else:
                                         selected_power = 0
