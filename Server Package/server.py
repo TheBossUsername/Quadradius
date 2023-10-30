@@ -62,7 +62,22 @@ def legal_move(selected_piece, selected_square, board):
         else:
             return False
         
-    
+
+def give_power(board):
+    for row in range(8):
+        for col in range(8):
+            square = board.squares[row][col]
+            piece = board.pieces[row][col]
+            if square.power != None and piece != None:
+                if len(piece.powers) >= 3:
+                    del piece.powers[0]
+                else:
+                    piece.powers.append(square.power)
+                    square.power = None
+                    send_data = f"GIVE:{piece.row}:{piece.col}:{piece.power.type}:{square.row}:{square.col}"
+                    for c in clients:
+                        c.send(send_data.encode())
+                    time.sleep(1)
 
 
 
@@ -103,14 +118,17 @@ def handle_client(client_socket, board):
                     else:
                         spawn -= 1    
                     time.sleep(1)
+                    give_power(board)
                     turn_counter += 1
                     current_turn = clients[turn_counter % 2]
                     send_data = "YOUR_TURN"
                     current_turn.send(send_data.encode()) 
                     time.sleep(1)
+                    
                 else:
                     send_data = "NOT_LEGAL"
                     client_socket.send(send_data.encode())
+
                     
         
         

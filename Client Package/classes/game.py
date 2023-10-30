@@ -39,16 +39,11 @@ class Game:
         else:
             return 0
         
-    def give_power(self, board):
-        for row in range(ROWS):
-            for col in range(COLS):
-                square = board.squares[row][col]
-                piece = board.pieces[row][col]
-                if square.power != None and piece != None:
-                    if len(piece.powers) >= 3:
-                        del piece.powers[0]
-                    piece.powers.append(square.power)
-                    square.power = None
+    def give_power(self, piece, square):
+        if len(piece.powers) >= 3:
+            del piece.powers[0]
+        piece.powers.append(square.power)
+        square.power = None
                 
 
 
@@ -188,7 +183,6 @@ class Game:
                 text = ("That is not a legal move, Back: X")
             elif "MOVE" in data:
                 message_parts = data.split(":")
-                print(message_parts)
                 piece_row = message_parts[1]
                 piece_col = message_parts[2]
                 square_row = message_parts[3]
@@ -219,11 +213,21 @@ class Game:
                     text = (f"Turn error turn : {turn}")
             elif "SPAWN" in data:
                 message_parts = data.split(":")
-                print(message_parts)
                 square_row = message_parts[1]
                 square_col = message_parts[2]
                 type = message_parts[3]
                 board.spawn_power(int(square_row), int(square_col), int(type))
+            elif "GIVE" in data:
+                message_parts = data.split(":")
+                piece_row = message_parts[1]
+                piece_col = message_parts[2]
+                type = message_parts[3]
+                square_row = message_parts[4]
+                square_col = message_parts[5]
+                sp = board.pieces[int(piece_row)][int(piece_col)]
+                sq = board.squares[int(square_row)][int(square_col)]
+                type = int(type)
+                self.give_power(sp, sq, type)
 
 
             
