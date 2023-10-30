@@ -2,13 +2,12 @@ from random import randint, choice
 from .constants import *
 
 
-total = 29
 class Power:
 
     def __init__(self, type):
         self.type = type
     
-    def get_name(self):
+    def get_name(self): # Return power name for selection
 
         if self.type == 1:
             return ("Wall column")
@@ -97,7 +96,7 @@ class Power:
         if self.type == 29:
             return ("Relocate")
         
-    def show_targets(self, piece, board):
+    def show_targets(self, piece, board): # Show what squares and or pieces it will affect 
         # Columns
         if self.type == 1 or self.type == 4 or self.type == 17:
             t1 = piece.traits.count(1)
@@ -145,6 +144,7 @@ class Power:
         if self.type == 7 or self.type == 8 or self.type == 9 or self.type == 10 or self.type == 11 or self.type == 15 or self.type == 16:
             board.squares[piece.row][piece.col].targeted = True
 
+        # No friendly powers yet
         # Friendly Columns
         if False:
             t1 = piece.traits.count(1)
@@ -302,7 +302,7 @@ class Power:
                                 square = board.squares[piece.row + y][piece.col + x]
                                 square.targeted = True
 
-    def use(self, piece, board):
+    def use(self, piece, board): # Use selected piece's power
         # Wall column
         if self.type == 1:
             t1 = piece.traits.count(1)

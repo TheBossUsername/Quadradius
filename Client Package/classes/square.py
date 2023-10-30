@@ -31,7 +31,7 @@ class Square:
         l_thick = padd
         
         if self.height >= tier + 1:
-            if tier > 0:
+            if tier > 0: # If square is not at the bottom, draw a platform up to it's height
                 if self.height >= tier + 1:
                     if self.height == tier + 1:
                         for z in range(s_height, 0, -1):

@@ -11,54 +11,36 @@ from .server import Client
 class Game:
 
     def __init__(self, server_ip, server_port):
-        self.server = Client(server_ip, server_port)
+        self.server = Client(server_ip, server_port) # Make client socket
         self.width = 800
         self.height = 800
         self.clock = pygame.time.Clock()
         self.fps = 60
-        self.window = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
+        self.window = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE) # Make window
         pygame.display.set_caption('Quadradius')
         pygame.init()
-        pygame.time.set_timer(pygame.USEREVENT, 100)
-
-    def check_win(self, board):
-        pieces_1 = 0
-        pieces_2 = 0
-        for row in range(ROWS):
-            for col in range(COLS):
-                piece = board.pieces[row][col]
-                if piece != None:
-                    if piece.player == 1:
-                        pieces_1 += 1
-                    elif piece.player == 2:
-                        pieces_2 += 1
-        if pieces_1 == 0:
-            return 2
-        elif pieces_2 == 0:
-            return 1
-        else:
-            return 0
+        pygame.time.set_timer(pygame.USEREVENT, 100) # Timer for animated power orbs
         
     def give_power(self, piece, square):
         if len(piece.powers) >= 3:
             del piece.powers[0]
         piece.powers.append(square.power)
-        square.power = None
-                
+        square.power = None        
 
 
-    def run_game(self):
-        board = Board()
+    def run_game(self): 
 
-        your_turn = False
-        use_power = False
-        selected_piece = None
-        selected_square = board.get_selected_square()
-        turn = 1
-        timer = 0
+        board = Board() # Make player board
+        your_turn = False 
+        use_power = False # Variable to lock input when selecting powers
+        selected_piece = None 
+        selected_square = board.get_selected_square() # Highlighted square to move and select
+        turn = 1 # Turn counter 
+        timer = 0 # Timer for animated power orbs
         selected_power = None
-        won = 0
+        won = 0 # Variable for who won
 
+        # Intitialize text at the bottom
         if turn == 1:
             text = ("It is Red's Turn")
         elif turn == 2:
@@ -74,16 +56,16 @@ class Game:
                 if event.type == pygame.QUIT:
                     running = False
 
-                if event.type == pygame.VIDEORESIZE:
+                if event.type == pygame.VIDEORESIZE: # Updates window when resized
                     self.width  = event.w
                     self.height  = event.h
                     self.window = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
 
-                if event.type == pygame.USEREVENT:
-                    timer += 1
-                    
+                if event.type == pygame.USEREVENT: # Adds 1 to timer each second
+                    timer += 1   
                 
                 if event.type == pygame.KEYDOWN:
+                    # Moves the selected square unless selecting powers
                     if event.key == pygame.K_UP:
                         if use_power:
                             pass
@@ -113,12 +95,13 @@ class Game:
                             pass
                         else:
                             selected_square = board.move_selected_square(selected_square, 4)
-                    if your_turn:
+                    
+                    if your_turn: # Check if it is your turn
                         if event.key == pygame.K_SPACE:
                             if use_power:
                                 pass
                             else:
-                                if selected_piece == None:
+                                if selected_piece == None: # If no piece selected, select piece
                                     selected_piece = board.select_piece()
                                     if selected_piece == None:
                                         text = ("No piece was selected")
@@ -134,15 +117,13 @@ class Game:
                                     else:
                                         text = ("Error: Unknown thing selected")
                                         selected_piece = board.de_select_piece()
-                                elif selected_piece != None:
+                                elif selected_piece != None: # If piece already selected, attempt to move it to selected square
                                     data = f"MOVE:{selected_piece.row}:{selected_piece.col}:{selected_square.row}:{selected_square.col}"
-                                    self.server.send_player_input(data)     
-                                    
-                                        
+                                    self.server.send_player_input(data)        
                                 else:
                                     text = ("ERROR with piece")
 
-                        if event.key == pygame.K_x:
+                        if event.key == pygame.K_x: # Back out and deselect piece
                             selected_piece = board.de_select_piece()
                             use_power = False
                             selected_power = None
@@ -153,7 +134,7 @@ class Game:
                             else:
                                 text = (f"Turn error turn : {turn}")
                         
-                        if event.key == pygame.K_z:
+                        if event.key == pygame.K_z: # Open pieces power menu, or use selecte power
                             if selected_piece == None:
                                 text = ("No piece was selected")
                             elif selected_piece != None:
@@ -173,12 +154,13 @@ class Game:
                             text = ("It is Blue's Turn")
                         else:
                             text = (f"Turn error turn : {turn}")
-            data = self.server.recieve_server_update()
+
+            data = self.server.recieve_server_update() # Receive update from server
             if data == None:
                 pass
             elif data == "NOT_LEGAL":
                 text = ("That is not a legal move, Back: X")
-            elif "MOVE" in data:
+            elif "MOVE" in data: # This piece moved, update player board
                 message_parts = data.split(":")
                 piece_row = message_parts[1]
                 piece_col = message_parts[2]
@@ -188,11 +170,12 @@ class Game:
                 sq = board.squares[int(square_row)][int(square_col)]
                 board.move_piece(selected_piece, sq)
                 selected_piece = board.de_select_piece()
+                # Change turn
                 if turn == 1:
                     turn = 2
                 elif turn == 2:
                     turn = 1
-            elif data == "END_TURN":
+            elif data == "END_TURN": # Stop sending input
                 your_turn = False
                 if turn == 1:
                     text = ("It is Red's Turn")
@@ -200,7 +183,7 @@ class Game:
                     text = ("It is Blue's Turn")
                 else:
                     text = (f"Turn error turn : {turn}")
-            elif data == "YOUR_TURN":
+            elif data == "YOUR_TURN": # Allow input to be sent
                 your_turn = True
                 if turn == 1:
                     text = ("It is Red's Turn")
@@ -208,13 +191,13 @@ class Game:
                     text = ("It is Blue's Turn")
                 else:
                     text = (f"Turn error turn : {turn}")
-            elif "SPAWN" in data:
+            elif "SPAWN" in data: # Update board with spawned power
                 message_parts = data.split(":")
                 square_row = message_parts[1]
                 square_col = message_parts[2]
                 type = message_parts[3]
                 board.spawn_power(int(square_row), int(square_col), int(type))
-            elif "GIVE" in data:
+            elif "GIVE" in data: # Give piece this power
                 message_parts = data.split(":")
                 piece_row = message_parts[1]
                 piece_col = message_parts[2]
@@ -223,7 +206,7 @@ class Game:
                 sp = board.pieces[int(piece_row)][int(piece_col)]
                 sq = board.squares[int(square_row)][int(square_col)]
                 self.give_power(sp, sq)
-            elif "USE" in data:
+            elif "USE" in data: # Use power from selected piece
                 message_parts = data.split(":")
                 piece_row = message_parts[1]
                 piece_col = message_parts[2]
@@ -238,7 +221,7 @@ class Game:
                     turn = 2
                 elif turn == 2:
                     turn = 1
-            elif data == "RED_WINS":
+            elif data == "RED_WINS": 
                 won = 1
             elif data == "BLUE_WINS":
                 won = 2
@@ -248,12 +231,13 @@ class Game:
 
 
             if use_power:
-                selected_piece.show_targets(selected_power, board)
+                selected_piece.show_targets(selected_power, board) # Show what the power will affect
             else:
-                board.de_target_squares()
+                board.de_target_squares() 
             
-            board.draw(self.window, self.width, self.height, timer)
-            if use_power:
+            board.draw(self.window, self.width, self.height, timer) # draw the board
+            # Write text to the bottom
+            if use_power: # If selecting a power
                 width_spacing = 2 + len(selected_piece.powers)
                 for x in range(0, len(selected_piece.powers)):
                     text = (f"{selected_piece.get_power_name(x)}")
@@ -281,8 +265,10 @@ class Game:
                 text_rect = text_surface.get_rect()
                 text_rect.center = (text_center)
                 self.window.blit(text_surface, text_rect)
+
             pygame.display.update()
-            if won == 1 or won == 2:
+
+            if won == 1 or won == 2: # If someone won display winner and quit
                 sleep(2)
                 self.window.fill(BLACK)
                 font = pygame.font.Font(None, 90)

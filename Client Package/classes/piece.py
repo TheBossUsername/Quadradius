@@ -44,25 +44,25 @@ class Piece:
         if padd < 2:
             padd = 2
 
-        if 5 in self.traits:
+        if 5 in self.traits: # If multiplying draw portal on square
             pygame.draw.rect(window, (0, 155 + (tier * 20), 155 + (tier * 20)), (x - (tier * s_height) + padd - (size // 2), y - (tier * s_height) + padd - (size // 2), size - (padd * 2), size - (padd * 2)))
             pygame.draw.rect(window, (0, 100 + (tier * 20), 100 + (tier * 20)), (x - (tier * s_height) + padd * 3 - (size // 2), y - (tier * s_height) + padd * 3 - (size // 2), size - (padd * 6), size - (padd * 6)))
             pygame.draw.rect(window, (0, 50 + (tier * 20), 50 + (tier * 20)), (x - (tier * s_height) + padd * 5 - (size // 2), y - (tier * s_height) + padd * 5 - (size // 2), size - (padd * 10), size - (padd * 10)))
         
-        if len(self.powers) != 0:
+        if len(self.powers) != 0: # If piece has powers, draw a green glow
             pygame.draw.circle(window, power_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .955)
 
-        if self.selected:
+        if self.selected: # If piece selected, highlight the outside
             pygame.draw.circle(window, CYAN, (x - (tier * s_height), y - (tier * s_height)), h_size * .9)
         else:
             pygame.draw.circle(window, BLACK, (x - (tier * s_height), y - (tier * s_height)), h_size * .9)
 
-        if 2 in self.traits:
+        if 2 in self.traits: # If jump proof draw steel body
             pygame.draw.circle(window, proof_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .8)
         else:
             pygame.draw.circle(window, body_color, (x - (tier * s_height), y - (tier * s_height)), h_size * .8)
 
-        if 4 in self.traits:
+        if 4 in self.traits: # If can move diagonally, draw four arrows
             path = os.path.join("classes", "Orb", "oarw.png")
             image = pygame.transform.scale(pygame.image.load(path), (size * .2, size * .2))
             arrow = pygame.transform.rotate(image, 45)
@@ -79,7 +79,7 @@ class Piece:
             t = y - (tier * s_height) - (size * .31) 
             window.blit(arrow, (z, t))
 
-        if 1 in self.traits:
+        if 1 in self.traits: # If has gown quadradius, draw antenna
             path = os.path.join("classes", "Orb", "oant.png")
             image = pygame.transform.scale(pygame.image.load(path), (size * .3, size * .3))
             antenna = pygame.transform.rotate(image, 55)
@@ -87,7 +87,7 @@ class Piece:
             t = y - (tier * s_height) - (size // 1.8) 
             window.blit(antenna, (z, t))
 
-        if 3 in self.traits:
+        if 3 in self.traits: # If has climb, draw 2 fans
             path = os.path.join("classes", "Orb", "ofan.png")
             fan = pygame.transform.scale(pygame.image.load(path), (size * .3, size * .3))
             z = x - (tier * s_height) - (size * .5)
@@ -104,6 +104,3 @@ class Piece:
     def move(self, row, col):
         self.row = row
         self.col = col
-
-    def use(self):
-        pass

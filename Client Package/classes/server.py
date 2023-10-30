@@ -6,7 +6,7 @@ class Client:
         self.server_port = server_port 
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((server_ip, server_port))
-        self.client_socket.setblocking(False)
+        self.client_socket.setblocking(False) 
         
 
     def send_player_input(self, data):
@@ -17,7 +17,7 @@ class Client:
             server_data = self.client_socket.recv(1024).decode()
             return server_data
         except BlockingIOError:
-            pass  # No data is available at the moment
+            pass  # If no updates recieved, keep drawing the board
 
 
 
