@@ -12,7 +12,7 @@ Playing this game was a big part of my childhood and it introduced me to strateg
 This is an local multiplayer version that you can play with a friend on the same network. It does not have online multiplayer at this moment.
 
 ## Tools Used
-I used Pygame and Sockets to create the game. The processes are organized into classes and employ parallel processing with threads.
+I used the libraries Pygame and Sockets. The processes are organized into classes and employ parallel processing with threads.
 
 ## How to Play
 ### Requirements
