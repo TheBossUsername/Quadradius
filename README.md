@@ -9,7 +9,7 @@ Quadradius is a game that is similar to checkers. The objective of the game is t
 Playing this game was a big part of my childhood and it introduced me to strategy games as a whole. However, when I searched for it as an adult, I was saddened to see that it no longer existed. In an attempt to relieve some nostalgia, I decided to recreate the game as best as I could using Python.
 
 # My Version of Quadradius
-This is an online version that you can play locally with a friend on the same network. It does not have multiplayer online at this moment.
+This is an local multiplayer version that you can play with a friend on the same network. It does not have online multiplayer at this moment.
 
 ## Tools Used
 I used Pygame and Sockets to create the game. The processes are organized into classes and employ parallel processing with threads.
