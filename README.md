@@ -23,7 +23,7 @@ I used the libraries Pygame and Sockets. The processes are organized into classe
 1. Download the packages on both computers.
 2. Open the main file in the server package in an IDE and edit the IP address to yours. [How to find my IP address](https://www.theverge.com/23351435/ip-address-how-to-find-macos-windows-ios-android-iphone)
 3. Run the server main file.
-4. on the 2 computers you want to use, open the main file in the client package in an IDE and edit the IP address to match the computer that is running the game server, the one you used in step 2. (If you are running the server and playing the game on the same computer you will have to run the client file in another terminal)
+4. On the 2 computers you want to use, open the main file in the client package in an IDE and edit the IP address to match the computer that is running the game server, the one you used in step 2. (If you are running the server and playing the game on the same computer you will have to run the client file in another terminal)
 5. If you see the game window pop up on both computers and say whose turn it is you are good to go! 
 6. To play again, close and run all the files with the same settings
 
